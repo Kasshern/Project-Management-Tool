@@ -1,0 +1,28 @@
+{
+  "name": "keith_salzman_p0",
+  "version": "1.0.0",
+  "description": "Project Assignment API",
+  "main": "index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/200427-Revature-Training/keith_salzman_p0.git"
+  },
+  "author": "Keith Salzman",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/200427-Revature-Training/keith_salzman_p0/issues"
+  },
+  "homepage": "https://github.com/200427-Revature-Training/keith_salzman_p0#readme",
+  "devDependencies": {
+    "nodemon": "^2.0.3",
+    "ts-node": "^8.10.1",
+    "typescript": "^3.8.3"
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "pg": "^8.0.3"
+  }
+}
