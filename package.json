@@ -2,7 +2,7 @@
   "name": "keith_salzman_p0",
   "version": "1.0.0",
   "description": "Project Assignment API",
-  "main": "index.ts",
+  "main": "index.ts", // this shuold be app.ts
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

@@ -1,12 +1,19 @@
 import express from 'express';
 import bodyParser from 'body-parser';
+import { trainerRouter } from './routers/trainer-router';
+import { associateRouter } from './routers/assocaigte-router';
+import { teamRouter } from './routers/team-router';
+import { projectRouter } from './routers/project-router';
 
+// Initialize express app
 const app = express();
 
+// Gets port environment variable value
 const port = process.env.PORT || 3000;
 
 app.set('port', port);
 
+// Parses body of request
 app.use(bodyParser.json());
 
 app.use((request, response, next) => {
@@ -14,10 +21,16 @@ app.use((request, response, next) => {
     next();
 })
 
-const users = [{
-    firstName: 'Trainer',
-    batch:      '200427'
-}];
+app.use('/trainer', trainerRouter)
+app.use('/associate', associateRouter)
+app.use('/team', teamRouter)
+app.use('project', projectRouter)
+
+
+// const users = [{
+//    firstName: 'Trainer',
+//    batch:      '200427'
+// }];
 
 /* Possible future objects:
 
@@ -36,7 +49,7 @@ const teams = [{
     teamObjective:  'backend',
     teamLeader:     'leader'
 }]
-*/
+
 
 
 // RESTful routes - Http
@@ -59,6 +72,7 @@ app.post('/users', (request, response, next) => {
     response.send('Processed by app.post');
     next();
 })
+*/
 
 // Begin listening on the designated port
 app.listen(port, () => {
