@@ -17,7 +17,11 @@
   },
   "homepage": "https://github.com/200427-Revature-Training/keith_salzman_p0#readme",
   "devDependencies": {
+    "@types/jest": "^25.2.1",
+    "@types/node": "^13.13.5",
+    "jest": "^26.0.1",
     "nodemon": "^2.0.3",
+    "ts-jest": "^25.4.0",
     "ts-node": "^8.10.1",
     "typescript": "^3.8.3"
   },
