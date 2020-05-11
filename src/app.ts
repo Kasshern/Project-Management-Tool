@@ -1,9 +1,10 @@
 import express from 'express';
 import bodyParser from 'body-parser';
-import { trainerRouter } from './routers/trainer-router';
-import { associateRouter } from './routers/assocaigte-router';
-import { teamRouter } from './routers/team-router';
-import { projectRouter } from './routers/project-router';
+import { trainerRouter } from './routers/trainer.router';
+import { associateRouter } from './routers/associate.router';
+import { teamRouter } from './routers/team.router';
+import { projectRouter } from './routers/project.router';
+import { db } from './daos/db';
 
 // Initialize express app
 const app = express();
@@ -24,55 +25,13 @@ app.use((request, response, next) => {
 app.use('/trainer', trainerRouter)
 app.use('/associate', associateRouter)
 app.use('/team', teamRouter)
-app.use('project', projectRouter)
+app.use('/project', projectRouter)
 
-
-// const users = [{
-//    firstName: 'Trainer',
-//    batch:      '200427'
-// }];
-
-/* Possible future objects:
-
-const associates = [{
-    firstName: 'Keith',
-    lastName:   'Salzman'
-}];
-
-const projects = [{
-    title:      'project0',
-    objective:  'RESTful API'
-}];
-
-const teams = [{
-    teamNumber:     'five',
-    teamObjective:  'backend',
-    teamLeader:     'leader'
-}]
-
-
-
-// RESTful routes - Http
-// GET Methods
-app.get('/users', (request, response, next) => {
-    console.log('Request received - processing at app.get');
-    response.json(users);
-    next();
-})
-
-// POST Methods
-app.post('/users', (request, response, next) => {
-    console.log(request.body);
-    const body = request.body;
-    if (body) {
-        // add user to our list
-        users.push(body);
-    }
-    console.log('Request received - processing at app.post');
-    response.send('Processed by app.post');
-    next();
-})
-*/
+process.on('unhandledRejection', () => {
+    db.end().then(() => {
+        console.log('Database pool closed');
+    });
+});
 
 // Begin listening on the designated port
 app.listen(port, () => {
