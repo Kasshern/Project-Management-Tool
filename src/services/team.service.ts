@@ -3,34 +3,30 @@ import * as teamDao from '../daos/team.dao';
 
 
 export function getAllTeams(): Promise<Team[]> {
-    // Internal logic
     return teamDao.getAllTeams();
 }
 
 export function getTeamById(id: number): Promise<Team> {
-    // Internal logic
     return teamDao.getTeamById(id);
 }
 
 export function saveTeam(team: any): Promise<Team> {
-    // Internal logic
     const newTeam = new Team(
-        undefined, undefined, team.teamName,
+        undefined, team.projectId, team.teamName,
          team.techFocus, team.maxPeople,
          team.numberOfPeople
     );
 
+        // Validate new team properties
     if (team.teamName && team.techFocus && team.maxPeople && team.numberOfPeople) {
         return teamDao.saveTeam(newTeam);
     } else {
-        // tslint:disable-next-line: no-console
         console.warn('Invalid Associate');
         return new Promise((resolve, reject) => reject(422));
     }
 }
 
 export function patchTeam(input: any): Promise<Team> {
-    // Internal logic
 // const birthdate = input.birthdate && new Date(input.birthdate);
 
 const team = new Team(
@@ -38,6 +34,7 @@ const team = new Team(
      input.techFocus, input.maxPeople, input.numberOfPeople
 );
 
+// Check that team already exists
 if (!team.id) {
     throw new Error ('400');
 }

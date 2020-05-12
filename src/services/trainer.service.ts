@@ -16,6 +16,7 @@ export function saveTrainer(trainer: any): Promise<Trainer> {
         trainer.lastName, new Date(trainer.birthdate)
     );
 
+    // Validate new trainer properties
    if (trainer.firstName && trainer.lastName && trainer.birthdate) {
         return trainerDao.saveTrainer(newTrainer);
     } else {
@@ -32,6 +33,7 @@ const trainer = new Trainer(
     input.lastName, birthdate
 );
 
+// Check that trainer already exists
 if (!trainer.id) {
     throw new Error ('400');
 }

@@ -19,10 +19,12 @@ export function getAssociateById(id: number): Promise<Associate> {
 }
 
 export function saveAssociate(associate: Associate): Promise<Associate> {
-    const sql = `INSERT INTO associates (first_name, last_name, birthdate) \
-VALUES ($1, $2, $3) RETURNING *`;
+    const sql = `INSERT INTO associates (trainer_id, team_id, first_name, last_name, birthdate) \
+VALUES ($1, $2, $3, $4, $5) RETURNING *`;
 
     return db.query<AssociateRow>(sql, [
+        associate.trainerId,
+        associate.teamId,
         associate.firstName,
         associate.lastName,
         associate.birthdate.toISOString()

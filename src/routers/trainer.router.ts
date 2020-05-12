@@ -8,7 +8,6 @@ trainerRouter.get('', (request, response, next) => {
         response.json(trainers);
         next();
     }).catch(err => {
-        // tslint:disable-next-line: no-console
         console.log(err);
         response.sendStatus(500);
     });
@@ -38,7 +37,6 @@ trainerRouter.post('', (request, response, next) => {
             response.json(newTrainer);
             next();
         }).catch(err => {
-            // tslint:disable-next-line: no-console
             console.log(err);
             response.sendStatus(500);
             next();
@@ -58,7 +56,6 @@ trainerRouter.patch('',(request, response, next) => {
             response.sendStatus(404);
         }
     }).catch(err => {
-        // tslint:disable-next-line: no-console
         console.log(err);
         response.sendStatus(500);
     }).finally(() => {

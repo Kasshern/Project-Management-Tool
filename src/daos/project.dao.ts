@@ -19,7 +19,7 @@ export function getProjectById(id: number): Promise<Project> {
 }
 
 export function saveProject(project: Project): Promise<Project> {
-    const sql = `INSERT INTO projects (project_name, tech_focus, max_people, number_of_people) \
+    const sql = `INSERT INTO projects (project_name, goal, max_teams, number_of_teams) \
 VALUES ($1, $2, $3, $4) RETURNING *`;
 
     return db.query<ProjectRow>(sql, [

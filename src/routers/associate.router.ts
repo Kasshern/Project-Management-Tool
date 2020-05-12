@@ -8,7 +8,6 @@ associateRouter.get('', (request, response, next) => {
         response.json(associates);
         next();
     }).catch(err => {
-        // tslint:disable-next-line: no-console
         console.log(err);
         response.sendStatus(500);
     });
@@ -24,7 +23,6 @@ associateRouter.get('/:id', (request, response, next) => {
         }
         next();
     }).catch(err => {
-        // tslint:disable-next-line: no-console
         console.log(err);
         response.sendStatus(500);
         next();
@@ -39,7 +37,6 @@ associateRouter.post('', (request, response, next) => {
             response.json(newAssociate);
             next();
         }).catch(err => {
-            // tslint:disable-next-line: no-console
             console.log(err);
             response.sendStatus(500);
             next();
@@ -59,7 +56,6 @@ associateRouter.patch('',(request, response, next) => {
             response.sendStatus(404);
         }
     }).catch(err => {
-        // tslint:disable-next-line: no-console
         console.log(err);
         response.sendStatus(500);
     }).finally(() => {

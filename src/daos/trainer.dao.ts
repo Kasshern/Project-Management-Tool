@@ -31,7 +31,7 @@ VALUES ($1, $2, $3) RETURNING *`;
 }
 
 export function patchTrainer(trainer: Trainer): Promise<Trainer> {
-    const sql = `UPDATE people SET first_name = COALESCE($1, first_name), \
+    const sql = `UPDATE trainers SET first_name = COALESCE($1, first_name), \
 last_name = COALESCE($2, last_name), birthdate = COALESCE($3, birthdate) \
 WHERE id = $4 RETURNING *`;
 

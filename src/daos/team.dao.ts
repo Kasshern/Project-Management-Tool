@@ -19,10 +19,11 @@ export function getTeamById(id: number): Promise<Team> {
 }
 
 export function saveTeam(team: Team): Promise<Team> {
-    const sql = `INSERT INTO teams (team_name, tech_focus, max_people, number_of_people) \
-VALUES ($1, $2, $3, $4) RETURNING *`;
+    const sql = `INSERT INTO teams (project_id, team_name, tech_focus, max_people, number_of_people) \
+VALUES ($1, $2, $3, $4, $5) RETURNING *`;
 
     return db.query<TeamRow>(sql, [
+        team.projectId,
         team.teamName,
         team.techFocus,
         team.maxPeople,
