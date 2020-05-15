@@ -13,11 +13,11 @@ export function getProjectById(id: number): Promise<Project> {
 export function saveProject(project: any): Promise<Project> {
     const newProject = new Project(
         undefined, project.projectName, project.goal,
-         project.maxTeams, project.numberOfTeams
+         project.maxTeams
     );
 
         // Validate new project properties
-    if (project.projectName && project.goal && project.maxTeams && project.numberOfTeams) {
+    if (project.projectName && project.goal && project.maxTeams) {
         return projectDao.saveProject(newProject);
     } else {
         console.warn('Invalid Project');
@@ -29,10 +29,10 @@ export function patchProject(input: any): Promise<Project> {
 // const birthdate = input.birthdate && new Date(input.birthdate);
 const project = new Project(
     input.id, input.projectName, input.goal,
-     input.maxTeams, input.numberOfTeams
+     input.maxTeams
 );
 
-// Cheack that project already exists
+// Check that project already exists
 if (!project.id) {
     throw new Error ('400');
 }

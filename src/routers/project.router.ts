@@ -1,78 +1,97 @@
 import express from 'express';
 import * as projectService from '../services/project.service'
+import { Project } from '../models/Project';
+
+
 export const projectRouter = express.Router();
 
-projectRouter.get('', (request, response, next) => {
-    projectService.getAllProjects().then(projects => {
+projectRouter.get('', async (request, response, next) => {
+
+    let projects: Project[];
+
+    try {
+        projects = await projectService.getAllProjects();
+    } catch (err) {
+        response.sendStatus(500);
+        return;
+    }
+
+    if (!projects) {
+        response.sendStatus(404);
+    } else {
         response.json(projects);
-        next();
-    }).catch(err => {
-        console.log(err);
-        response.sendStatus(500);
-    });
+    }
+    next();
 });
 
-projectRouter.get('/:id', (request, response, next) => {
-    const id = +request.params.id;
-    projectService.getProjectById(id).then(project => {
-        if (!project) {
-            response.sendStatus(404);
-        } else {
-            response.json(project);
-        }
-        next();
-    }).catch(err => {
-        console.log(err);
+projectRouter.get('/:id', async (request, response, next) => {
+    const id: number = parseInt(request.params.id);
+
+    let project: Project;
+
+    try {
+        project = await projectService.getProjectById(id);
+    } catch (err) {
         response.sendStatus(500);
-        next();
-    })
+        return;
+    }
+
+    if (!project) {
+        response.sendStatus(404);
+    } else {
+        response.json(project);
+    }
+    next();
 });
 
-projectRouter.post('', (request, response, next) => {
+projectRouter.post('', async (request, response, next) => {
     const project = request.body;
-    projectService.saveProject(project)
-        .then(newProject => {
-            response.status(201);
-            response.json(newProject);
-            next();
-        }).catch(err => {
-            console.log(err);
-            response.sendStatus(500);
-            next();
-        });
-});
 
-projectRouter.patch('',(request, response, next) => {
-    const project = request.body;
-    projectService.patchProject(project)
-    .then(updatedProject => {
-        if(updatedProject) {
-            response.status(201);
-            response.json(updatedProject);
-            next();
-        } else {
-            response.sendStatus(404);
-        }
-    }).catch(err => {
-        console.log(err);
+    try {
+        await projectService.saveProject(project);
+    } catch (err) {
         response.sendStatus(500);
-    }).finally(() => {
-        next();
-    });
+        return;
+    }
+    next();
 });
 
-projectRouter.delete('/:id', (request, response, next) => {
-    const id = +request.params.id;
-    projectService.deleteProject(id).then(project => {
-        if(!project) {
-            response.status(404);
-        } else {
-            response.json(project);
-        }
-        next();
-        }).catch(err => {
-            console.log(err);
-            response.sendStatus(500);
-            next();
-        });
+projectRouter.patch('', async (request, response, next) => {
+    const project = request.body;
+    let updatedProject: Project;
+
+    try {
+    updatedProject = await projectService.patchProject(project);
+    } catch (err) {
+        response.sendStatus(500);
+        return;
+    }
+
+    if (updatedProject) {
+        response.sendStatus(201);
+        response.json(updatedProject);
+    } else {
+        response.status(404);
+    }
+    next();
 });
+
+projectRouter.delete('/:id', async (request, response, next) => {
+    const id = parseInt(request.params.id);
+    let deletedProject: Project;
+
+    try {
+        deletedProject = await projectService.deleteProject(id);
+    } catch (err) {
+        response.sendStatus(500);
+        return;
+    }
+
+    if (!deletedProject) {
+        response.sendStatus(404);
+    } else {
+        response.json(deletedProject);
+    }
+    next();
+});
+

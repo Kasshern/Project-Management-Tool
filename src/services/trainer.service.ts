@@ -33,7 +33,7 @@ const trainer = new Trainer(
     input.lastName, birthdate
 );
 
-// Check that trainer already exists
+// Check that new trainer is a valid id
 if (!trainer.id) {
     throw new Error ('400');
 }

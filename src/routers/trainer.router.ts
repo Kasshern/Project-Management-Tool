@@ -1,81 +1,97 @@
 import express from 'express';
 import * as trainerService from '../services/trainer.service';
+import { Trainer } from '../models/Trainer';
 
 export const trainerRouter = express.Router();
 
-trainerRouter.get('', (request, response, next) => {
-    trainerService.getAllTrainers().then(trainers => {
+trainerRouter.get('', async (request, response, next) => {
+
+    let trainers: Trainer[];
+
+    try {
+        trainers = await trainerService.getAllTrainers();
+    } catch (err) {
+        console.log(err);
+        response.sendStatus(500);
+        return;
+    }
+
+    if (!trainers) {
+        response.sendStatus(404);
+    } else {
         response.json(trainers);
-        next();
-    }).catch(err => {
-        console.log(err);
-        response.sendStatus(500);
-    });
+    }
+    next();
 });
 
-trainerRouter.get('/:id', (request, response, next) => {
-    const id = +request.params.id;
-    trainerService.getTrainerById(id).then(trainer => {
-        if (!trainer) {
-            response.sendStatus(404);
-        } else {
-            response.json(trainer);
-        }
-        next();
-    }).catch(err => {
-        console.log(err);
+trainerRouter.get('/:id', async (request, response, next) => {
+    const id: number = parseInt(request.params.id);
+
+    let trainer: Trainer;
+
+    try {
+        trainer = await trainerService.getTrainerById(id);
+    } catch (err) {
         response.sendStatus(500);
-        next();
-    })
+        return;
+    }
+
+    if (!trainer) {
+        response.sendStatus(404);
+    } else {
+        response.json(trainer);
+    }
+    next();
 });
 
-trainerRouter.post('', (request, response, next) => {
+trainerRouter.post('', async (request, response, next) => {
     const trainer = request.body;
-    trainerService.saveTrainer(trainer)
-        .then(newTrainer => {
-            response.status(201);
-            response.json(newTrainer);
-            next();
-        }).catch(err => {
-            console.log(err);
-            response.sendStatus(500);
-            next();
-        });
-});
 
-
-trainerRouter.patch('',(request, response, next) => {
-    const trainer = request.body;
-    trainerService.patchTrainer(trainer)
-    .then(updatedTrainer => {
-        if(updatedTrainer) {
-            response.status(201);
-            response.json(updatedTrainer);
-            next();
-        } else {
-            response.sendStatus(404);
-        }
-    }).catch(err => {
-        console.log(err);
+    try {
+        await trainerService.saveTrainer(trainer);
+    } catch (err) {
         response.sendStatus(500);
-    }).finally(() => {
-        next();
-    });
+        return;
+    }
+    next();
 });
 
-trainerRouter.delete('/:id', (request, response, next) => {
-    const id = +request.params.id;
-    trainerService.deleteTrainer(id).then(trainer => {
-        if(!trainer) {
-            response.status(404);
-        } else {
-            response.json(trainer);
-        }
-        next();
-        }).catch(err => {
-            console.log(err);
-            response.sendStatus(500);
-            next();
-        });
+trainerRouter.patch('', async (request, response, next) => {
+    const trainer = request.body;
+    let updatedTrainer: Trainer;
+
+    try {
+    updatedTrainer = await trainerService.patchTrainer(trainer);
+    } catch (err) {
+        response.sendStatus(500);
+        return;
+    }
+
+    if (updatedTrainer) {
+        response.sendStatus(201);
+        response.json(updatedTrainer);
+    } else {
+        response.status(404);
+    }
+    next();
+});
+
+trainerRouter.delete('/:id', async (request, response, next) => {
+    const id = parseInt(request.params.id);
+    let deletedTrainer: Trainer;
+
+    try {
+        deletedTrainer = await trainerService.deleteTrainer(id);
+    } catch (err) {
+        response.sendStatus(500);
+        return;
+    }
+
+    if (!deletedTrainer) {
+        response.sendStatus(404);
+    } else {
+        response.json(deletedTrainer);
+    }
+    next();
 });
 

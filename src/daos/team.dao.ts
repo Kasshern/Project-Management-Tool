@@ -1,53 +1,56 @@
 import { db } from '../daos/db';
-import { Team, TeamRow } from '../models/Team';
+import { Team } from '../models/Team';
 
-export function getAllTeams(): Promise<Team[]> {
+/**
+ * Doc Notes
+ *
+ */
+export async function getAllTeams(): Promise<Team[]> {
     const sql = 'SELECT * FROM teams';
-    return db.query<TeamRow>(sql, []).then(result => {
-        const rows: TeamRow[] = result.rows;
-        console.log(rows);
-        const teams: Team[] = rows.map(row => Team.from(row));
-        return teams;
-    });
+
+    const result = await db.query<Team>(sql, []);
+    return result.rows;
 }
 
-export function getTeamById(id: number): Promise<Team> {
+export async function getTeamById(id: number): Promise<Team> {
     const sql = 'SELECT * FROM teams WHERE id = $1';
 
-    return db.query<TeamRow>(sql, [id])
-        .then(result => result.rows.map(row => Team.from(row))[0]);
+    const result = await db.query<Team>(sql, [id]);
+    return result.rows[0];
 }
 
-export function saveTeam(team: Team): Promise<Team> {
-    const sql = `INSERT INTO teams (project_id, team_name, tech_focus, max_people, number_of_people) \
-VALUES ($1, $2, $3, $4, $5) RETURNING *`;
+export async function saveTeam(team: Team): Promise<Team> {
+    const sql = `INSERT INTO teams (project_id, team_name, tech_focus, max_people) \
+VALUES ($1, $2, $3, $4) RETURNING *`;
 
-    return db.query<TeamRow>(sql, [
+    const result = await db.query<Team>(sql, [
         team.projectId,
         team.teamName,
         team.techFocus,
         team.maxPeople,
-        team.numberOfPeople
-    ]).then(result => result.rows.map(row => Team.from(row))[0]);
+    ]);
+    return result.rows[0];
 }
 
-export function patchTeam(team: Team): Promise<Team> {
+export async function patchTeam(team: Team): Promise<Team> {
     const sql = `UPDATE people SET team_name = COALESCE($1, team_name), \
 tech_focus = COALESCE($2, tech_focus), max_people = COALESCE($3, max_people), \
-number_of_people = COALESCE($4, number_of_people) WHERE id = $5 RETURNING *`;
+ WHERE id = $5 RETURNING *`;
 
-   // const birthdate = team.birthdate && team.birthdate.toISOString();
+    const result = await db.query(sql, [
+        team.teamName,
+        team.techFocus,
+        team.maxPeople,
+        team.id,
+        team.projectId
+        ]);
 
-    const params = [team.teamName, team.techFocus, team.maxPeople,
-                    team.numberOfPeople, team.id, team.projectId];
-
-    return db.query<TeamRow>(sql, params)
-        .then(result => result.rows.map(row => Team.from(row))[0]);
+    return result.rows[0];
 }
 
-export function deleteTeam(id: number): Promise<Team> {
+export async function deleteTeam(id: number): Promise<Team> {
     const sql = `DELETE FROM teams WHERE id = $1 RETURNING *`;
 
-    return db.query<TeamRow>(sql, [id])
-       .then(result => result.rows.map(row => Team.from(row))[0]);
+    const result = await db.query<Team>(sql, [id]);
+    return result.rows[0];
 }

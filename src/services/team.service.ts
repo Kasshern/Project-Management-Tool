@@ -13,15 +13,14 @@ export function getTeamById(id: number): Promise<Team> {
 export function saveTeam(team: any): Promise<Team> {
     const newTeam = new Team(
         undefined, team.projectId, team.teamName,
-         team.techFocus, team.maxPeople,
-         team.numberOfPeople
+         team.techFocus, team.maxPeople
     );
 
         // Validate new team properties
-    if (team.teamName && team.techFocus && team.maxPeople && team.numberOfPeople) {
+    if (team.projectId && team.teamName && team.techFocus && team.maxPeople ) {
         return teamDao.saveTeam(newTeam);
     } else {
-        console.warn('Invalid Associate');
+        console.warn('Invalid Team');
         return new Promise((resolve, reject) => reject(422));
     }
 }
@@ -31,10 +30,10 @@ export function patchTeam(input: any): Promise<Team> {
 
 const team = new Team(
     input.id, input.projectId, input.teamName,
-     input.techFocus, input.maxPeople, input.numberOfPeople
+     input.techFocus, input.maxPeople
 );
 
-// Check that team already exists
+// Check that new team has a valid id
 if (!team.id) {
     throw new Error ('400');
 }

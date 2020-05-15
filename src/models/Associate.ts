@@ -6,6 +6,11 @@ export class Associate {
     lastName: string;
     birthdate: Date;
 
+/**
+ *  Static function for creating an Associate  instance based on
+ *  the structure within the database
+ */
+
     static from(obj: AssociateRow): Associate {
         const associate = new Associate(
             obj.id, obj.trainer_id, obj.team_id, obj.first_name, obj.last_name, new Date(obj.birthdate)
@@ -22,6 +27,7 @@ export class Associate {
         this.birthdate = birthdate;
     }
 }
+
 
 export interface AssociateRow {
     id: number;

@@ -3,28 +3,32 @@ export class Project {
     projectName: string;
     goal: string;
     maxTeams: number;
-    numberOfTeams: number;
+    // numberOfTeams: number;
 
+/**
+ *  Static function for creating a Project instance based on 
+ *  the structure within the database
+ */
+/*
     static from(obj: ProjectRow): Project {
         const project = new Project(
-            obj.id, obj.project_name, obj.goal, obj. max_teams, obj.number_of_teams
+            obj.id, obj.project_name, obj.goal, obj. max_teams
         );
         return project;
     }
-
-    constructor( id: number, projectName: string, goal: string, maxTeams: number, numberOfTeams: number) {
+*/
+    constructor( id: number, projectName: string, goal: string, maxTeams: number) {
         this.id = id;
         this.projectName = projectName;
         this.goal = goal;
         this.maxTeams = maxTeams;
-        this.numberOfTeams = numberOfTeams;
     }
 }
-
+/*
 export interface ProjectRow {
     id: number;
     project_name: string;
     goal: string;
     max_teams: number;
-    number_of_teams: number;
 }
+*/
