@@ -17,10 +17,9 @@ export function saveTrainer(trainer: any): Promise<Trainer> {
     );
 
     // Validate new trainer properties
-   if (trainer.firstName && trainer.lastName && trainer.birthdate) {
+    if (trainer.firstName && trainer.lastName && trainer.birthdate) {
         return trainerDao.saveTrainer(newTrainer);
     } else {
-        console.warn('Invalid Trainer');
         return new Promise((resolve, reject) => reject(422));
     }
 }

@@ -37,7 +37,7 @@ export async function patchTeam(team: Team): Promise<Team> {
 tech_focus = COALESCE($2, tech_focus), max_people = COALESCE($3, max_people), \
  WHERE id = $5 RETURNING *`;
 
-    const result = await db.query(sql, [
+    const result = await db.query<Team>(sql, [
         team.teamName,
         team.techFocus,
         team.maxPeople,

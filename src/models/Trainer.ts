@@ -9,6 +9,14 @@ export class Trainer {
  *  the structure within the database
  */
 
+/*
+static from(obj: TrainerRow): Trainer {
+    const trainer = new Trainer(
+        obj.id, obj.first_name, obj.last_name, new Date(obj.birthdate)
+    );
+    return trainer;
+}
+*/
 
     constructor( id: number, firstName: string, lastName: string, birthdate: Date) {
         this.id = id;
@@ -18,4 +26,12 @@ export class Trainer {
     }
 }
 
-
+/*
+export interface TrainerRow {
+    id: number;
+    first_name: string;
+    last_name: string;
+    birthdate: Date;
+    // email: string;
+}
+*/

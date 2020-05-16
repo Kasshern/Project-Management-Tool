@@ -19,12 +19,10 @@ export async function getAssociateById(id: number): Promise<Associate> {
 }
 
 export async function saveAssociate(associate: Associate): Promise<Associate> {
-    const sql = `INSERT INTO associates (trainer_id, team_id, first_name, last_name, birthdate) \
-VALUES ($1, $2, $3, $4, $5) RETURNING *`;
+    const sql = `INSERT INTO associates (first_name, last_name, birthdate) \
+                VALUES ($1, $2, $3) RETURNING *`;
 
     const result = await db.query<Associate>(sql, [
-        associate.trainerId,
-        associate.teamId,
         associate.firstName,
         associate.lastName,
         associate.birthdate.toISOString()
@@ -41,8 +39,6 @@ export async function patchAssociate(associate: Associate): Promise<Associate> {
     const birthdate = associate.birthdate && associate.birthdate.toISOString();
 
     const result = await db.query(sql, [
-        associate.trainerId,
-        associate.teamId,
         associate.firstName,
         associate.lastName,
         birthdate,

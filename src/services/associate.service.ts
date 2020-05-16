@@ -12,14 +12,14 @@ export function getAssociateById(id: number): Promise<Associate> {
 
 export function saveAssociate(associate: any): Promise<Associate> {
     const newAssociate = new Associate(
-        undefined, associate.trainerId,associate.teamId,
-         associate.firstName, associate.lastName,
-         new Date(associate.birthdate)
+        undefined,
+        associate.firstName,
+        associate.lastName,
+        new Date(associate.birthdate)
     );
 
     // Validate new associate properties
-    if (associate.trainerId && associate.teamId && associate.firstName
-        && associate.lastName && associate.birthdate) {
+    if ( associate.firstName && associate.lastName && associate.birthdate) {
         return associateDao.saveAssociate(newAssociate);
     } else {
         console.warn('Invalid Associate');
@@ -32,8 +32,10 @@ export function patchAssociate(input: any): Promise<Associate> {
 const birthdate = input.birthdate && new Date(input.birthdate);
 
 const associate = new Associate(
-    input.id, input.trainerId, input.teamId,
-     input.firstName, input.lastName, birthdate
+    input.id,
+    input.firstName,
+    input.lastName,
+    birthdate
 );
 
 // Check new associate for valid id

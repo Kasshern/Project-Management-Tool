@@ -20,10 +20,11 @@ export async function getProjectById(id: number): Promise<Project> {
 }
 
 export async function saveProject(project: Project): Promise<Project> {
-    const sql = `INSERT INTO projects (project_name, goal, max_teams) \
-VALUES ($1, $2, $3) RETURNING *`;
+    const sql = `INSERT INTO projects (batch_id, project_name, goal, max_teams) \
+VALUES ($1, $2, $3, $4) RETURNING *`;
 
     const result = await db.query<Project>(sql, [
+        project.batchId,
         project.projectName,
         project.goal,
         project.maxTeams
@@ -32,13 +33,15 @@ VALUES ($1, $2, $3) RETURNING *`;
 }
 
 export async function patchProject(project: Project): Promise<Project> {
-    const sql = `UPDATE people SET project_name = COALESCE($1, project_name), \
-                goal = COALESCE($2, goal), max_teams = COALESCE($3, max_teams), \
-                 WHERE id = $4 RETURNING *`;
+    const sql = `UPDATE people SET batch_id = COALESCE($1, batch_id) , \
+                project_name = COALESCE($2, project_name), \
+                goal = COALESCE($3, goal), max_teams = COALESCE($4, max_teams), \
+                 WHERE id = $5 RETURNING *`;
 
    // const birthdate = project.birthdate && project.birthdate.toISOString();
 
     const result = await db.query(sql, [
+        project.batchId,
         project.projectName,
         project.goal,
         project.maxTeams,

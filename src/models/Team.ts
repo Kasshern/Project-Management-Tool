@@ -10,6 +10,7 @@ export class Team {
  *  Static function for creating a Team instance based on 
  *  the structure within the database
  */
+
 /*
     static from(obj: TeamRow): Team {
         const team = new Team(
@@ -18,6 +19,7 @@ export class Team {
         return team;
     }
 */
+
     constructor( id: number, projectId: number, teamName: string, techFocus: string, maxPeople: number) {
         this.id = id;
         this.projectId = projectId;
@@ -26,6 +28,7 @@ export class Team {
         this.maxPeople = maxPeople;
     }
 }
+
 /*
 export interface TeamRow {
     id: number;

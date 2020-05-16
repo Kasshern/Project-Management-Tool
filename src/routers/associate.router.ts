@@ -54,7 +54,6 @@ associateRouter.post('', async (request, response, next) => {
     next();
 });
 
-
 associateRouter.patch('', async (request, response, next) => {
     const associate = request.body;
     let updatedAssociate: Associate;

@@ -5,6 +5,8 @@ import { associateRouter } from './routers/associate.router';
 import { teamRouter } from './routers/team.router';
 import { projectRouter } from './routers/project.router';
 import { db } from './daos/db';
+import { batchRouter } from './routers/batch.router';
+import { skillRouter } from './routers/skill.router';
 
 // Initialize express app
 const app = express();
@@ -23,9 +25,11 @@ app.use((request, response, next) => {
 })
 
 app.use('/trainer', trainerRouter)
+app.use('/batch', batchRouter)
 app.use('/associate', associateRouter)
 app.use('/team', teamRouter)
 app.use('/project', projectRouter)
+app.use('/skill', skillRouter)
 
 process.on('unhandledRejection', () => {
     db.end().then(() => {
