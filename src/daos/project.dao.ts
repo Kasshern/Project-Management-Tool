@@ -38,8 +38,6 @@ export async function patchProject(project: Project): Promise<Project> {
                 goal = COALESCE($3, goal), max_teams = COALESCE($4, max_teams), \
                  WHERE id = $5 RETURNING *`;
 
-   // const birthdate = project.birthdate && project.birthdate.toISOString();
-
     const result = await db.query(sql, [
         project.batchId,
         project.projectName,

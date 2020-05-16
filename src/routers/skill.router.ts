@@ -46,12 +46,17 @@ skillRouter.get('/:id', async (request, response, next) => {
 
 skillRouter.post('', async (request, response, next) => {
     const skill = request.body;
-
+    let newSkill: Skill;
     try {
-        await skillService.saveSkill(skill);
+        newSkill = await skillService.saveSkill(skill);
     } catch (err) {
         response.sendStatus(500);
         return;
+    }
+
+    if (newSkill) {
+        response.status(201);
+        response.json(newSkill);
     }
     next();
 });
@@ -67,11 +72,11 @@ skillRouter.patch('', async (request, response, next) => {
         return;
     }
 
-    if (updatedSkill) {
-        response.sendStatus(201);
-        response.json(updatedSkill);
+    if (!updatedSkill) {
+        response.sendStatus(404);
     } else {
-        response.status(404);
+        response.status(201);
+        response.json(updatedSkill);
     }
     next();
 });

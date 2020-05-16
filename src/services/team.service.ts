@@ -20,13 +20,11 @@ export function saveTeam(team: any): Promise<Team> {
     if (team.projectId && team.teamName && team.techFocus && team.maxPeople ) {
         return teamDao.saveTeam(newTeam);
     } else {
-        console.warn('Invalid Team');
         return new Promise((resolve, reject) => reject(422));
     }
 }
 
 export function patchTeam(input: any): Promise<Team> {
-// const birthdate = input.birthdate && new Date(input.birthdate);
 
 const team = new Team(
     input.id, input.projectId, input.teamName,

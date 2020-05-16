@@ -22,7 +22,6 @@ export function saveAssociate(associate: any): Promise<Associate> {
     if ( associate.firstName && associate.lastName && associate.birthdate) {
         return associateDao.saveAssociate(newAssociate);
     } else {
-        console.warn('Invalid Associate');
         return new Promise((resolve, reject) => reject(422));
     }
 }

@@ -1,159 +1,164 @@
 import express from 'express';
 import bodyParser from 'body-parser';
-import { trainerRouter } from '../../src/routers/trainer.router';
-import * as trainerService from '../../src/services/trainer.service';
+import { projectRouter } from '../../src/routers/project.router';
+import * as projectService from '../../src/services/project.service';
 import request from 'supertest';
 
-// Setup mock for trainerService dependency
-jest.mock('../../src/services/trainer.service');
-const mockTrainerService = trainerService as any;
+// Setup mock for projectService dependency
+jest.mock('../../src/services/project.service');
+const mockProjectService = projectService as any;
 
 // Setup Express server and middleware
 const app = express();
 app.use(bodyParser.json())
-app.use('/trainer', trainerRouter);
+app.use('/project', projectRouter);
 
-describe('GET /trainer', () => {
+describe('GET /project', () => {
     test('Returns normally under normal circumstances', async () => {
-
-        mockTrainerService.getAllTrainers
+        mockProjectService.getAllProjects
             .mockImplementation(async () => []);
         await request(app)
-            .get('/trainer')
+            .get('/project')
             .expect(200)
             .expect('content-type', 'application/json; charset=utf-8');
     });
 
     test('No object found (404)', async() => {
-        mockTrainerService.getAllTrainers
+        mockProjectService.getAllProjects
             .mockImplementation(async () => (0));
 
         await request(app)
-            .get('/trainer')
+            .get('/project')
             .expect(404);
     });
 
     test('Returns normally under normal circumstances', async () => {
-
-        mockTrainerService.getAllTrainers
+        mockProjectService.getAllProjects
             .mockImplementation(async () => {throw new Error()});
         await request(app)
-            .get('/trainer')
+            .get('/project')
             .expect(500);
     });
-
-    
 });
 
-describe('POST /trainer', () => {
+describe('POST /project', () => {
     test('Successful creation should return 201 status', async () => {
-
-        mockTrainerService.saveTrainer
+        mockProjectService.saveProject
             .mockImplementation(async () => ({}));
+
         const payload = {
-            firstName: 'John',
-            lastName: 'Smith',
-            birthdate: '2020-01-01'
+            batchId: 100,
+            projectName: 'Project 100',
+            goal: 'take over the world',
+            maxTeams: 100
         };
 
         await request(app)
-            .post('/trainer')
+            .post('/project')
             .send(payload)
             .expect(201)
             .expect('content-type', 'application/json; charset=utf-8')
     });
 
     test('Should return 500 when encountering an error', async () => {
-
-        mockTrainerService.saveTrainer
+        mockProjectService.saveProject
             .mockImplementation(async () => {throw new Error()});
 
         const payload = {
-            firstName: 'John',
-            lastName: 'Smith',
-            birthdate: '2020-01-01'
+            batchId: 100,
+            projectName: 'Project 100',
+            goal: 'take over the world',
+            maxTeams: 100
         };
 
         await request(app)
-            .post('/trainer')
+            .post('/project')
             .send(payload)
             .expect(500);
     });
 });
 
-describe('GET /trainer/:id', () => {
+describe('GET /project/:id', () => {
     test('Normal behavior Json with status 200', async () => {
-        mockTrainerService.getTrainerById
+        mockProjectService.getProjectById
             .mockImplementation(async () => ({}));
 
         await request(app)
-            .get('/trainer/1')
+            .get('/project/1')
             .expect(200)
             .expect('content-type', 'application/json; charset=utf-8')
     });
 
     test('No object found (404)', async() => {
-        mockTrainerService.getTrainerById
+        mockProjectService.getProjectById
             .mockImplementation(async () => (0));
 
         await request(app)
-            .get('/trainer/1')
+            .get('/project/1')
             .expect(404);
     });
 
     test('500 internal server error', async() => {
-        mockTrainerService.getTrainerById
+        mockProjectService.getProjectById
             .mockImplementation(async () => {throw new Error()});
 
         await request(app)
-            .get('/trainer/1')
+            .get('/project/1')
             .expect(500)
     })
 })
 
-describe('PATCH /trainer', () => {
+describe('PATCH /project', () => {
     test('Successful update should return 201 status', async () => {
-        mockTrainerService.patchTrainer
+
+        mockProjectService.patchProject
             .mockImplementation(async () => ({}));
 
         const payload = {
-            id: 1,
-            firstName: 'John',
-            lastName: 'Smith',
-            birthdate: '2020-01-01'
+            batchId: 100,
+            projectName: 'Project 100',
+            goal: 'take over the world',
+            maxTeams: 100
         };
 
         await request(app)
-            .patch('/trainer')
+            .patch('/project')
             .send(payload)
             .expect(201)
             .expect('content-type', 'application/json; charset=utf-8')
     });
 
-    test('No object found (404)', async() => {
-        mockTrainerService.patchTrainer
-            .mockImplementation(async () => (0));
-
-        await request(app)
-            .patch('/trainer')
-            .expect(404);
-        });
-
     test('Should return 500 when encountering an error', async () => {
 
-        mockTrainerService.patchTrainer
+        mockProjectService.patchProject
             .mockImplementation(async () => {throw new Error()});
 
         const payload = {
-            id: 1,
-            firstName: 'John',
-            lastName: 'Smith',
-            birthdate: '2020-01-01'
+            batchId: 100,
+            projectName: 'Project 100',
+            goal: 'take over the world',
+            maxTeams: 100
         };
 
         await request(app)
-            .patch('/trainer')
+            .patch('/project')
             .send(payload)
             .expect(500);
+    });
+
+    test('No object found (404)', async() => {
+        mockProjectService.patchProject
+            .mockImplementation(async () => (0));
+
+        const payload = {
+            batchId: 100,
+            projectName: 'Project 100',
+            goal: 'take over the world',
+            maxTeams: 100
+        };
+
+        await request(app)
+            .patch('/project')
+            .expect(404);
     });
 });

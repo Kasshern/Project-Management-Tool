@@ -45,12 +45,17 @@ teamRouter.get('/:id', async (request, response, next) => {
 
 teamRouter.post('', async (request, response, next) => {
     const team = request.body;
-
+    let newTeam: Team;
     try {
-        await teamService.saveTeam(team);
+        newTeam = await teamService.saveTeam(team);
     } catch (err) {
         response.sendStatus(500);
         return;
+    }
+
+    if (newTeam) {
+        response.status(201);
+        response.json(newTeam);
     }
     next();
 });
@@ -66,11 +71,11 @@ teamRouter.patch('', async (request, response, next) => {
         return;
     }
 
-    if (updatedTeam) {
-        response.sendStatus(201);
-        response.json(updatedTeam);
+    if (!updatedTeam) {
+        response.sendStatus(404);
     } else {
-        response.status(404);
+        response.status(201);
+        response.json(updatedTeam);
     }
     next();
 });

@@ -1,159 +1,150 @@
 import express from 'express';
 import bodyParser from 'body-parser';
-import { trainerRouter } from '../../src/routers/trainer.router';
-import * as trainerService from '../../src/services/trainer.service';
+import { skillRouter } from '../../src/routers/skill.router';
+import * as skillService from '../../src/services/skill.service';
 import request from 'supertest';
 
-// Setup mock for trainerService dependency
-jest.mock('../../src/services/trainer.service');
-const mockTrainerService = trainerService as any;
+// Setup mock for skillService dependency
+jest.mock('../../src/services/skill.service');
+const mockSkillService = skillService as any;
 
 // Setup Express server and middleware
 const app = express();
 app.use(bodyParser.json())
-app.use('/trainer', trainerRouter);
+app.use('/skill', skillRouter);
 
-describe('GET /trainer', () => {
+describe('GET /skill', () => {
     test('Returns normally under normal circumstances', async () => {
-
-        mockTrainerService.getAllTrainers
-            .mockImplementation(async () => []);
+        mockSkillService.getAllSkills
+        .mockImplementation(async () => []);
         await request(app)
-            .get('/trainer')
+            .get('/skill')
             .expect(200)
             .expect('content-type', 'application/json; charset=utf-8');
     });
 
     test('No object found (404)', async() => {
-        mockTrainerService.getAllTrainers
+        mockSkillService.getAllSkills
             .mockImplementation(async () => (0));
 
         await request(app)
-            .get('/trainer')
+            .get('/skill')
             .expect(404);
     });
 
     test('Returns normally under normal circumstances', async () => {
-
-        mockTrainerService.getAllTrainers
-            .mockImplementation(async () => {throw new Error()});
+        mockSkillService.getAllSkills.mockImplementation(async () => {throw new Error()});
         await request(app)
-            .get('/trainer')
+            .get('/skill')
             .expect(500);
     });
-
-    
 });
 
-describe('POST /trainer', () => {
+describe('POST /skill', () => {
     test('Successful creation should return 201 status', async () => {
-
-        mockTrainerService.saveTrainer
-            .mockImplementation(async () => ({}));
+        mockSkillService.saveSkill.mockImplementation(async () => ({}));
         const payload = {
-            firstName: 'John',
-            lastName: 'Smith',
-            birthdate: '2020-01-01'
+            skillLevel: 'Master',
+            technology: 'React'
         };
 
         await request(app)
-            .post('/trainer')
+            .post('/skill')
             .send(payload)
             .expect(201)
             .expect('content-type', 'application/json; charset=utf-8')
     });
 
     test('Should return 500 when encountering an error', async () => {
-
-        mockTrainerService.saveTrainer
-            .mockImplementation(async () => {throw new Error()});
+        mockSkillService.saveSkill.mockImplementation(async () => {throw new Error()});
 
         const payload = {
-            firstName: 'John',
-            lastName: 'Smith',
-            birthdate: '2020-01-01'
+            skillLevel: 'Master',
+            technology: 'React'
         };
 
         await request(app)
-            .post('/trainer')
+            .post('/skill')
             .send(payload)
             .expect(500);
     });
 });
 
-describe('GET /trainer/:id', () => {
+describe('GET /skill/:id', () => {
     test('Normal behavior Json with status 200', async () => {
-        mockTrainerService.getTrainerById
+        mockSkillService.getSkillById
             .mockImplementation(async () => ({}));
 
         await request(app)
-            .get('/trainer/1')
+            .get('/skill/1')
             .expect(200)
             .expect('content-type', 'application/json; charset=utf-8')
     });
 
     test('No object found (404)', async() => {
-        mockTrainerService.getTrainerById
+        mockSkillService.getSkillById
             .mockImplementation(async () => (0));
 
         await request(app)
-            .get('/trainer/1')
+            .get('/skill/blahblahblah')
             .expect(404);
     });
 
     test('500 internal server error', async() => {
-        mockTrainerService.getTrainerById
+        mockSkillService.getSkillById
             .mockImplementation(async () => {throw new Error()});
 
         await request(app)
-            .get('/trainer/1')
+            .get('/skill/99')
             .expect(500)
     })
 })
 
-describe('PATCH /trainer', () => {
+describe('PATCH /skill', () => {
     test('Successful update should return 201 status', async () => {
-        mockTrainerService.patchTrainer
+
+        mockSkillService.patchSkill
             .mockImplementation(async () => ({}));
 
         const payload = {
-            id: 1,
-            firstName: 'John',
-            lastName: 'Smith',
-            birthdate: '2020-01-01'
+            skillLevel: 'Master',
+            technology: 'React'
         };
 
         await request(app)
-            .patch('/trainer')
+            .patch('/skill')
             .send(payload)
             .expect(201)
             .expect('content-type', 'application/json; charset=utf-8')
     });
 
-    test('No object found (404)', async() => {
-        mockTrainerService.patchTrainer
-            .mockImplementation(async () => (0));
-
-        await request(app)
-            .patch('/trainer')
-            .expect(404);
-        });
-
     test('Should return 500 when encountering an error', async () => {
 
-        mockTrainerService.patchTrainer
+        mockSkillService.patchSkill
             .mockImplementation(async () => {throw new Error()});
 
         const payload = {
-            id: 1,
-            firstName: 'John',
-            lastName: 'Smith',
-            birthdate: '2020-01-01'
+            skillLevel: 'Master',
+            technology: 'React'
         };
 
         await request(app)
-            .patch('/trainer')
+            .patch('/skill')
             .send(payload)
             .expect(500);
+    });
+
+    test('No object found (404)', async() => {
+        mockSkillService.patchSkill
+            .mockImplementation(async () => (0));
+
+        const payload = {
+            skillLevel: 'Master',
+            technology: 'React'
+        };
+
+        await request(app)
+            .patch('/skill')
+            .expect(404);
     });
 });

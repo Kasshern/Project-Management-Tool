@@ -11,7 +11,6 @@ batchRouter.get('', async (request, response, next) => {
     try {
         batches = await batchService.getAllBatches();
     } catch (err) {
-        console.log(err);
         response.sendStatus(500);
         return;
     }
@@ -46,12 +45,17 @@ batchRouter.get('/:id', async (request, response, next) => {
 
 batchRouter.post('', async (request, response, next) => {
     const batch = request.body;
-
+    let newBatch: Batch;
     try {
-        await batchService.saveBatch(batch);
+        newBatch = await batchService.saveBatch(batch);
     } catch (err) {
         response.sendStatus(500);
         return;
+    }
+
+    if (newBatch) {
+        response.status(201);
+        response.json(newBatch);
     }
     next();
 });
@@ -67,11 +71,11 @@ batchRouter.patch('', async (request, response, next) => {
         return;
     }
 
-    if (updatedBatch) {
-        response.sendStatus(201);
-        response.json(updatedBatch);
+    if (!updatedBatch) {
+        response.sendStatus(404);
     } else {
-        response.status(404);
+        response.status(201);
+        response.json(updatedBatch);
     }
     next();
 });

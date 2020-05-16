@@ -1,55 +1,47 @@
 import express from 'express';
 import bodyParser from 'body-parser';
-import { trainerRouter } from '../../src/routers/trainer.router';
-import * as trainerService from '../../src/services/trainer.service';
+import { associateRouter } from '../../src/routers/associate.router';
+import * as associateService from '../../src/services/associate.service';
 import request from 'supertest';
 
-// Setup mock for trainerService dependency
-jest.mock('../../src/services/trainer.service');
-const mockTrainerService = trainerService as any;
+// Setup mock for associateService dependency
+jest.mock('../../src/services/associate.service');
+const mockAssociateService = associateService as any;
 
 // Setup Express server and middleware
 const app = express();
 app.use(bodyParser.json())
-app.use('/trainer', trainerRouter);
+app.use('/associate', associateRouter);
 
-describe('GET /trainer', () => {
+describe('GET /associate', () => {
     test('Returns normally under normal circumstances', async () => {
-
-        mockTrainerService.getAllTrainers
-            .mockImplementation(async () => []);
+        mockAssociateService.getAllAssociates.mockImplementation(async () => []);
         await request(app)
-            .get('/trainer')
+            .get('/associate')
             .expect(200)
             .expect('content-type', 'application/json; charset=utf-8');
     });
 
     test('No object found (404)', async() => {
-        mockTrainerService.getAllTrainers
+        mockAssociateService.getAllAssociates
             .mockImplementation(async () => (0));
 
         await request(app)
-            .get('/trainer')
+            .get('/associate')
             .expect(404);
     });
 
     test('Returns normally under normal circumstances', async () => {
-
-        mockTrainerService.getAllTrainers
-            .mockImplementation(async () => {throw new Error()});
+        mockAssociateService.getAllAssociates.mockImplementation(async () => {throw new Error()});
         await request(app)
-            .get('/trainer')
+            .get('/associate')
             .expect(500);
     });
-
-    
 });
 
-describe('POST /trainer', () => {
+describe('POST /associate', () => {
     test('Successful creation should return 201 status', async () => {
-
-        mockTrainerService.saveTrainer
-            .mockImplementation(async () => ({}));
+        mockAssociateService.saveAssociate.mockImplementation(async () => ({}));
         const payload = {
             firstName: 'John',
             lastName: 'Smith',
@@ -57,16 +49,14 @@ describe('POST /trainer', () => {
         };
 
         await request(app)
-            .post('/trainer')
+            .post('/associate')
             .send(payload)
             .expect(201)
             .expect('content-type', 'application/json; charset=utf-8')
     });
 
     test('Should return 500 when encountering an error', async () => {
-
-        mockTrainerService.saveTrainer
-            .mockImplementation(async () => {throw new Error()});
+        mockAssociateService.saveAssociate.mockImplementation(async () => {throw new Error()});
 
         const payload = {
             firstName: 'John',
@@ -75,45 +65,46 @@ describe('POST /trainer', () => {
         };
 
         await request(app)
-            .post('/trainer')
+            .post('/associate')
             .send(payload)
             .expect(500);
     });
 });
 
-describe('GET /trainer/:id', () => {
+describe('GET /associate/:id', () => {
     test('Normal behavior Json with status 200', async () => {
-        mockTrainerService.getTrainerById
+        mockAssociateService.getAssociateById
             .mockImplementation(async () => ({}));
 
         await request(app)
-            .get('/trainer/1')
+            .get('/associate/1')
             .expect(200)
             .expect('content-type', 'application/json; charset=utf-8')
     });
 
     test('No object found (404)', async() => {
-        mockTrainerService.getTrainerById
+        mockAssociateService.getAssociateById
             .mockImplementation(async () => (0));
 
         await request(app)
-            .get('/trainer/1')
+            .get('/associate/blahblahblah')
             .expect(404);
     });
 
     test('500 internal server error', async() => {
-        mockTrainerService.getTrainerById
+        mockAssociateService.getAssociateById
             .mockImplementation(async () => {throw new Error()});
 
         await request(app)
-            .get('/trainer/1')
+            .get('/associate/99')
             .expect(500)
     })
 })
 
-describe('PATCH /trainer', () => {
+describe('PATCH /associate', () => {
     test('Successful update should return 201 status', async () => {
-        mockTrainerService.patchTrainer
+
+        mockAssociateService.patchAssociate
             .mockImplementation(async () => ({}));
 
         const payload = {
@@ -124,36 +115,43 @@ describe('PATCH /trainer', () => {
         };
 
         await request(app)
-            .patch('/trainer')
+            .patch('/associate')
             .send(payload)
             .expect(201)
             .expect('content-type', 'application/json; charset=utf-8')
     });
 
     test('No object found (404)', async() => {
-        mockTrainerService.patchTrainer
+        mockAssociateService.patchAssociate
             .mockImplementation(async () => (0));
 
-        await request(app)
-            .patch('/trainer')
-            .expect(404);
-        });
-
-    test('Should return 500 when encountering an error', async () => {
-
-        mockTrainerService.patchTrainer
-            .mockImplementation(async () => {throw new Error()});
-
         const payload = {
-            id: 1,
             firstName: 'John',
             lastName: 'Smith',
             birthdate: '2020-01-01'
         };
 
         await request(app)
-            .patch('/trainer')
+            .patch('/associate')
+            .send(payload)
+            .expect(404);
+    });
+
+    test('Should return 500 when encountering an error', async () => {
+
+        mockAssociateService.patchAssociate
+            .mockImplementation(async () => {throw new Error()});
+
+        const payload = {
+            firstName: 'John',
+            lastName: 'Smith',
+            birthdate: '2020-01-01'
+        };
+
+        await request(app)
+            .patch('/associate')
             .send(payload)
             .expect(500);
     });
+
 });

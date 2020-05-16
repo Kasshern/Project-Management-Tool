@@ -46,12 +46,17 @@ projectRouter.get('/:id', async (request, response, next) => {
 
 projectRouter.post('', async (request, response, next) => {
     const project = request.body;
-
+    let newProject: Project;
     try {
-        await projectService.saveProject(project);
+        newProject = await projectService.saveProject(project);
     } catch (err) {
         response.sendStatus(500);
         return;
+    }
+
+    if (newProject) {
+        response.status(201);
+        response.json(newProject);
     }
     next();
 });
@@ -67,11 +72,11 @@ projectRouter.patch('', async (request, response, next) => {
         return;
     }
 
-    if (updatedProject) {
-        response.sendStatus(201);
-        response.json(updatedProject);
+    if (!updatedProject) {
+        response.sendStatus(404);
     } else {
-        response.status(404);
+        response.status(201);
+        response.json(updatedProject);
     }
     next();
 });

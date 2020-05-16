@@ -25,13 +25,13 @@ associateRouter.get('', async (request, response, next) => {
 
 associateRouter.get('/:id', async (request, response, next) => {
     const id = parseInt(request.params.id);
-
     let associate: Associate;
 
     try {
         associate = await associateService.getAssociateById(id);
     } catch (err) {
         response.sendStatus(500);
+        return;
     }
 
     if (!associate) {
@@ -44,12 +44,18 @@ associateRouter.get('/:id', async (request, response, next) => {
 
 associateRouter.post('', async (request, response, next) => {
     const associate = request.body;
+    let newAssociate: Associate;
 
     try {
-        await associateService.saveAssociate(associate);
+        newAssociate = await associateService.saveAssociate(associate);
     } catch (err) {
         response.sendStatus(500);
         return;
+    }
+
+    if (newAssociate) {
+        response.status(201);
+        response.json(newAssociate);
     }
     next();
 });
@@ -60,15 +66,16 @@ associateRouter.patch('', async (request, response, next) => {
 
     try {
         updatedAssociate = await associateService.patchAssociate(associate);
-    } catch (err) { 
+    } catch (err) {
         response.sendStatus(500);
+        return;
     }
 
-    if (updatedAssociate) {
-        response.sendStatus(201);
-        response.json(updatedAssociate);
-    } else {
+    if (!updatedAssociate) {
         response.sendStatus(404);
+    } else {
+        response.status(201);
+        response.json(updatedAssociate);
     }
     next();
 });

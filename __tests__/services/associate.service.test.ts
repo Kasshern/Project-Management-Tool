@@ -1,17 +1,17 @@
-import * as trainerService from '../../src/services/trainer.service';
-import * as trainerDao from '../../src/daos/trainer.dao';
-import { Trainer } from '../../src/models/Trainer';
+import * as associateService from '../../src/services/associate.service';
+import * as associateDao from '../../src/daos/associate.dao';
+import { Associate } from '../../src/models/Associate';
 
 
-jest.mock('../../src/daos/trainer.dao');
+jest.mock('../../src/daos/associate.dao');
 
-const mockTrainerDao = trainerDao as any;
+const mockAssociateDao = associateDao as any;
 
-describe('saveTrainer', () => {
+describe('saveAssociate', () => {
     test('422 returned if no firstName provided', async () => {
         expect.assertions(1);
 
-        mockTrainerDao.saveTrainer
+        mockAssociateDao.saveAssociate
             .mockImplementation(() => ({}));
 
         const payload = {
@@ -20,8 +20,8 @@ describe('saveTrainer', () => {
         }
 
         try {
-            await trainerService.saveTrainer(payload);
-            fail('trainerService.saveTrainer did not throw expected error');
+            await associateService.saveAssociate(payload);
+            fail('associateService.saveAssociate did not throw expected error');
         } catch(err) {
             expect(err).toBeDefined();
         }
@@ -29,8 +29,8 @@ describe('saveTrainer', () => {
 
     test('422 returned if no birthdate is provided', async () => {
         expect.assertions(1);
-        mockTrainerDao.saveTrainer
-        .mockImplementation(() => ({}));
+        mockAssociateDao.saveAssociate
+            .mockImplementation(() => ({}));
 
         const payload = {
             lastName: 'Smith',
@@ -38,8 +38,8 @@ describe('saveTrainer', () => {
         }
 
         try {
-            await trainerService.saveTrainer(payload);
-            fail('trainerService.saveTrainer did not throw expected error');
+            await associateService.saveAssociate(payload);
+            fail('associateService.saveAssociate did not throw expected error');
         } catch(err) {
             expect(err).toBeDefined();
         }
@@ -47,7 +47,7 @@ describe('saveTrainer', () => {
 
     test('422 returned if no lastName provided', async () => {
         expect.assertions(1);
-        mockTrainerDao.saveTrainer
+        mockAssociateDao.saveAssociate
             .mockImplementation(() => ({}));
 
         const payload = {
@@ -56,17 +56,17 @@ describe('saveTrainer', () => {
         }
 
         try {
-            await trainerService.saveTrainer(payload);
-            fail('trainerService.saveTrainer did not throw expected error');
+            await associateService.saveAssociate(payload);
+            fail('associateService.saveAssociate did not throw expected error');
         } catch(err) {
             expect(err).toBeDefined();
         }
     });
 
-    test('Input object transformed to Trainer object', async () => {
+    test('Input object transformed to Associate object', async () => {
         expect.assertions(2);
 
-        mockTrainerDao.saveTrainer
+        mockAssociateDao.saveAssociate
             .mockImplementation(o => o);
 
         const payload = {
@@ -75,16 +75,16 @@ describe('saveTrainer', () => {
             birthdate: '2000-01-01'
         };
 
-        const result = await trainerService.saveTrainer(payload);
+        const result = await associateService.saveAssociate(payload);
 
-        expect(payload).not.toBeInstanceOf(Trainer);
-        expect(result).toBeInstanceOf(Trainer);
+        expect(payload).not.toBeInstanceOf(Associate);
+        expect(result).toBeInstanceOf(Associate);
     });
 
     test('ID value of input is replaced in output', async () => {
         expect.assertions(1);
 
-        mockTrainerDao.saveTrainer
+        mockAssociateDao.saveAssociate
             .mockImplementation(o => o);
 
         const payload = {
@@ -94,7 +94,7 @@ describe('saveTrainer', () => {
             birthdate: '2000-01-01'
         };
 
-        const result = await trainerService.saveTrainer(payload);
+        const result = await associateService.saveAssociate(payload);
 
         expect(result.id).not.toBe(payload.id);
     });
@@ -102,7 +102,7 @@ describe('saveTrainer', () => {
     test('Extraneous fields in input are not in output', async () => {
         expect.assertions(1);
 
-        mockTrainerDao.saveTrainer
+        mockAssociateDao.saveAssociate
             .mockImplementation(o => o);
 
         const payload = {
@@ -112,14 +112,13 @@ describe('saveTrainer', () => {
             likesSkateboards: true
         };
 
-        const result = await trainerService.saveTrainer(payload) as any;
+        const result = await associateService.saveAssociate(payload) as any;
 
         expect(result.likesSkateboards).not.toBeDefined();
     });
 });
 
-
-describe('patchTrainer', () => {
+describe('patchAssociate', () => {
     /*
         1. When a valid patch with an id property is provied, patch succeeds
             returning a truthy object.
@@ -129,7 +128,7 @@ describe('patchTrainer', () => {
     test('successful patch', async () => {
         expect.assertions(1);
 
-        mockTrainerDao.patchTrainer
+        mockAssociateDao.patchAssociate
             .mockImplementation(() => ({}));
 
         const payload = {
@@ -139,14 +138,14 @@ describe('patchTrainer', () => {
             birthdate: '2020-01-01'
         };
 
-        const result = await trainerService.patchTrainer(payload);
+        const result = await associateService.patchAssociate(payload);
         expect(result).toBeTruthy();
     });
 
     test('patch fails when no valid id is provided', async () => {
         expect.assertions(1);
 
-        mockTrainerDao.patchTrainer
+        mockAssociateDao.patchAssociate
             .mockImplementation(() => ({}));
 
         const payload = {
@@ -156,7 +155,7 @@ describe('patchTrainer', () => {
         };
 
         try {
-            await trainerService.patchTrainer(payload);
+            await associateService.patchAssociate(payload);
             fail();
         } catch(err) {
             expect(err).toBeTruthy();

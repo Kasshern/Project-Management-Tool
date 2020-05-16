@@ -46,12 +46,18 @@ trainerRouter.get('/:id', async (request, response, next) => {
 
 trainerRouter.post('', async (request, response, next) => {
     const trainer = request.body;
+    let newTrainer: Trainer;
 
     try {
-        await trainerService.saveTrainer(trainer);
+        newTrainer = await trainerService.saveTrainer(trainer);
     } catch (err) {
         response.sendStatus(500);
         return;
+    }
+
+    if (newTrainer) {
+        response.status(201);
+        response.json(newTrainer);
     }
     next();
 });
@@ -67,11 +73,11 @@ trainerRouter.patch('', async (request, response, next) => {
         return;
     }
 
-    if (updatedTrainer) {
-        response.sendStatus(201);
-        response.json(updatedTrainer);
+    if (!updatedTrainer) {
+        response.sendStatus(404);
     } else {
-        response.status(404);
+        response.status(201);
+        response.json(updatedTrainer);
     }
     next();
 });
