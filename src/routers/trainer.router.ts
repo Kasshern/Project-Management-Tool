@@ -26,7 +26,6 @@ trainerRouter.get('', async (request, response, next) => {
 
 trainerRouter.get('/:id', async (request, response, next) => {
     const id: number = parseInt(request.params.id);
-
     let trainer: Trainer;
 
     try {
@@ -46,11 +45,13 @@ trainerRouter.get('/:id', async (request, response, next) => {
 
 trainerRouter.post('', async (request, response, next) => {
     const trainer = request.body;
+    console.log(trainer);
     let newTrainer: Trainer;
 
     try {
         newTrainer = await trainerService.saveTrainer(trainer);
     } catch (err) {
+        console.log(err);
         response.sendStatus(500);
         return;
     }
@@ -69,6 +70,7 @@ trainerRouter.patch('', async (request, response, next) => {
     try {
     updatedTrainer = await trainerService.patchTrainer(trainer);
     } catch (err) {
+        console.log(err);
         response.sendStatus(500);
         return;
     }
@@ -84,6 +86,7 @@ trainerRouter.patch('', async (request, response, next) => {
 
 trainerRouter.delete('/:id', async (request, response, next) => {
     const id = parseInt(request.params.id);
+    console.log(id);
     let deletedTrainer: Trainer;
 
     try {

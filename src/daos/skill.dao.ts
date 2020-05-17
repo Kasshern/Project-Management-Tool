@@ -25,7 +25,7 @@ VALUES ($1, $2) RETURNING *`;
 
     const result = await db.query<Skill>(sql, [
         skill.skillLevel,
-        skill.technology,
+        skill.technology
     ]);
     return result.rows[0];
 }
@@ -43,7 +43,7 @@ technology = COALESCE($2, technology) WHERE id = $3 RETURNING *`;
 }
 
 export async function deleteSkill(id: number): Promise<Skill> {
-    const sql = `DELETE FROM skills WHERE id = $1 RETURNING *`;
+    const sql = `DELETE FROM associate_skills WHERE skill_id = $1 RETURNING *`;
 
     const result = await db.query<Skill>(sql, [id]);
     return result.rows[0];

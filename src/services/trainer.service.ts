@@ -15,7 +15,7 @@ export function saveTrainer(trainer: any): Promise<Trainer> {
         undefined, trainer.firstName,
         trainer.lastName, new Date(trainer.birthdate)
     );
-
+    console.log(newTrainer);
     // Validate new trainer properties
     if (trainer.firstName && trainer.lastName && trainer.birthdate) {
         return trainerDao.saveTrainer(newTrainer);
@@ -28,7 +28,7 @@ export function patchTrainer(input: any): Promise<Trainer> {
 const birthdate = input.birthdate && new Date(input.birthdate);
 
 const trainer = new Trainer(
-    input.id, input.trainerId,
+    input.id, input.firstName,
     input.lastName, birthdate
 );
 

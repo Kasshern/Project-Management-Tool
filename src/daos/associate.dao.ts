@@ -31,10 +31,9 @@ export async function saveAssociate(associate: Associate): Promise<Associate> {
     }
 
 export async function patchAssociate(associate: Associate): Promise<Associate> {
-    const sql = `UPDATE people SET trainer_id = COALESCE ($1, trainer_id), \
-    team_id = COALESCE ($2, team_id), first_name = COALESCE($3, first_name), \
-    last_name = COALESCE($4, last_name), birthdate = COALESCE($5, birthdate) \
-    WHERE id = $6 RETURNING *`;
+    const sql = `UPDATE associates SET first_name = COALESCE($1, first_name), \
+    last_name = COALESCE($2, last_name), birthdate = COALESCE($3, birthdate) \
+    WHERE id = $4 RETURNING *`;
 
     const birthdate = associate.birthdate && associate.birthdate.toISOString();
 

@@ -33,16 +33,16 @@ VALUES ($1, $2, $3, $4) RETURNING *`;
 }
 
 export async function patchTeam(team: Team): Promise<Team> {
-    const sql = `UPDATE people SET team_name = COALESCE($1, team_name), \
-tech_focus = COALESCE($2, tech_focus), max_people = COALESCE($3, max_people), \
- WHERE id = $5 RETURNING *`;
+    const sql = `UPDATE teams SET project_id = COALESCE ($1, project_id),  \
+    team_name = COALESCE($2, team_name), tech_focus = COALESCE($3, tech_focus), \
+    max_people = COALESCE($4, max_people) WHERE id = $5 RETURNING *`;
 
     const result = await db.query<Team>(sql, [
+        team.projectId,
         team.teamName,
         team.techFocus,
         team.maxPeople,
-        team.id,
-        team.projectId
+        team.id
         ]);
 
     return result.rows[0];

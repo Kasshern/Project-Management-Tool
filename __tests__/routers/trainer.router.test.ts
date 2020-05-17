@@ -157,3 +157,33 @@ describe('PATCH /trainer', () => {
             .expect(500);
     });
 });
+
+describe('DELETE /trainer/:id', () => {
+    test('Normal behavior Json with status 200', async () => {
+        mockTrainerService.getTrainerById
+            .mockImplementation(async () => ({}));
+
+        await request(app)
+            .get('/trainer/1')
+            .expect(200)
+            .expect('content-type', 'application/json; charset=utf-8')
+    });
+
+    test('No object found (404)', async() => {
+        mockTrainerService.getTrainerById
+            .mockImplementation(async () => (0));
+
+        await request(app)
+            .get('/trainer/1')
+            .expect(404);
+    });
+
+    test('500 internal server error', async() => {
+        mockTrainerService.getTrainerById
+            .mockImplementation(async () => {throw new Error()});
+
+        await request(app)
+            .get('/trainer/1')
+            .expect(500)
+    })
+})

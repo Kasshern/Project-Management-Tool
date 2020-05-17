@@ -33,10 +33,10 @@ VALUES ($1, $2, $3, $4) RETURNING *`;
 }
 
 export async function patchProject(project: Project): Promise<Project> {
-    const sql = `UPDATE people SET batch_id = COALESCE($1, batch_id) , \
+    const sql = `UPDATE projects SET batch_id = COALESCE($1, batch_id) , \
                 project_name = COALESCE($2, project_name), \
-                goal = COALESCE($3, goal), max_teams = COALESCE($4, max_teams), \
-                 WHERE id = $5 RETURNING *`;
+                goal = COALESCE($3, goal), max_teams = COALESCE($4, max_teams) \
+                WHERE id = $5 RETURNING *`;
 
     const result = await db.query(sql, [
         project.batchId,

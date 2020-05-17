@@ -28,6 +28,7 @@ VALUES ($1, $2, $3) RETURNING *`;
         trainer.lastName,
         trainer.birthdate.toISOString()
     ]);
+
     return result.rows[0];
 }
 
@@ -43,13 +44,16 @@ WHERE id = $4 RETURNING *`;
         trainer.lastName,
         birthdate,
         trainer.id
+        
     ]);
     return result.rows[0];
 }
 
 export async function deleteTrainer(id: number): Promise<Trainer> {
-    const sql = `DELETE FROM trainers WHERE id = $1 RETURNING *`;
+    console.log(id);
 
+    const sql = `DELETE FROM trainers WHERE id = $1 RETURNING *`;
     const result = await db.query<Trainer>(sql, [id]);
+
     return result.rows[0];
 }

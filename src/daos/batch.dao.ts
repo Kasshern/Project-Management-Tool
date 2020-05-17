@@ -22,12 +22,14 @@ export async function getBatchById(id: number): Promise<Batch> {
 
 export async function saveBatch(batch: Batch): Promise<Batch> {
     const sql = `INSERT INTO batches (trainer_id, batch_name, start_date, duration_in_days) \
-VALUES ($1, $2, $3) RETURNING *`;
+VALUES ($1, $2, $3, $4) RETURNING *`;
+
+const startDate = batch.startDate && batch.startDate.toISOString();
 
     const result = await db.query<Batch>(sql, [
         batch.trainerId,
         batch.batchName,
-        batch.startDate.toISOString(),
+        startDate,
         batch.durationInDays
     ]);
     return result.rows[0];
@@ -35,15 +37,15 @@ VALUES ($1, $2, $3) RETURNING *`;
 
 export async function patchBatch(batch: Batch): Promise<Batch> {
     const sql = `UPDATE batches SET trainer_id = COALESCE($1, trainer_id), \
-batch_name = COALESCE($2, batch_name), birthdate = COALESCE($3, start_date), \
+batch_name = COALESCE($2, batch_name), start_date = COALESCE($3, start_date), \
 duration_in_days = COALESCE($4, duration_in_days) WHERE id = $5 RETURNING *`;
 
-    const birthdate = batch.startDate && batch.startDate.toISOString();
+    const startDate = batch.startDate && batch.startDate.toISOString();
 
     const result = await db.query<Batch>(sql, [
         batch.trainerId,
         batch.batchName,
-        batch.startDate.toISOString(),
+        startDate,
         batch.durationInDays,
         batch.id
     ]);
