@@ -1,5 +1,5 @@
 import { db } from '../daos/db';
-import { Batch } from '../models/Batch';
+import { Batch, BatchRow } from '../models/Batch';
 
 /**
  * Doc Notes
@@ -9,15 +9,15 @@ import { Batch } from '../models/Batch';
 export async function getAllBatches(): Promise<Batch[]> {
     const sql = 'SELECT * FROM batches';
 
-    const result = await db.query<Batch>(sql, []);
-    return result.rows;
+    const result = await db.query<BatchRow>(sql, []);
+    return result.rows.map(Batch.from);
     }
 
 export async function getBatchById(id: number): Promise<Batch> {
     const sql = 'SELECT * FROM batches WHERE id = $1';
 
-    const result = await db.query<Batch>(sql, [id]);
-        return result.rows[0];
+    const result = await db.query<BatchRow>(sql, [id]);
+    return result.rows.map(Batch.from)[0];
 }
 
 export async function saveBatch(batch: Batch): Promise<Batch> {
@@ -26,13 +26,13 @@ VALUES ($1, $2, $3, $4) RETURNING *`;
 
 const startDate = batch.startDate && batch.startDate.toISOString();
 
-    const result = await db.query<Batch>(sql, [
+    const result = await db.query<BatchRow>(sql, [
         batch.trainerId,
         batch.batchName,
         startDate,
         batch.durationInDays
     ]);
-    return result.rows[0];
+    return result.rows.map(Batch.from)[0];
 }
 
 export async function patchBatch(batch: Batch): Promise<Batch> {
@@ -42,19 +42,19 @@ duration_in_days = COALESCE($4, duration_in_days) WHERE id = $5 RETURNING *`;
 
     const startDate = batch.startDate && batch.startDate.toISOString();
 
-    const result = await db.query<Batch>(sql, [
+    const result = await db.query<BatchRow>(sql, [
         batch.trainerId,
         batch.batchName,
         startDate,
         batch.durationInDays,
         batch.id
     ]);
-    return result.rows[0];
+    return result.rows.map(Batch.from)[0];
 }
 
 export async function deleteBatch(id: number): Promise<Batch> {
     const sql = `DELETE FROM batches WHERE id = $1 RETURNING *`;
 
-    const result = await db.query<Batch>(sql, [id]);
-    return result.rows[0];
+    const result = await db.query<BatchRow>(sql, [id]);
+    return result.rows.map(Batch.from)[0];
 }

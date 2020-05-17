@@ -1,5 +1,5 @@
 import { db } from '../daos/db';
-import { Project } from '../models/Project';
+import { Project, ProjectRow } from '../models/Project';
 
 /**
  * Doc Notes
@@ -8,28 +8,28 @@ import { Project } from '../models/Project';
 export async function getAllProjects(): Promise<Project[]> {
     const sql = 'SELECT * FROM projects';
 
-    const result = await db.query<Project>(sql, []);
-    return result.rows;
+    const result = await db.query<ProjectRow>(sql, []);
+    return result.rows.map(Project.from);
 }
 
 export async function getProjectById(id: number): Promise<Project> {
     const sql = 'SELECT * FROM projects WHERE id = $1';
 
-    const result = await db.query<Project>(sql, [id]);
-    return result.rows[0];
+    const result = await db.query<ProjectRow>(sql, [id]);
+    return result.rows.map(Project.from)[0];
 }
 
 export async function saveProject(project: Project): Promise<Project> {
     const sql = `INSERT INTO projects (batch_id, project_name, goal, max_teams) \
 VALUES ($1, $2, $3, $4) RETURNING *`;
 
-    const result = await db.query<Project>(sql, [
+    const result = await db.query<ProjectRow>(sql, [
         project.batchId,
         project.projectName,
         project.goal,
         project.maxTeams
     ]);
-    return result.rows[0];
+    return result.rows.map(Project.from)[0];
 }
 
 export async function patchProject(project: Project): Promise<Project> {
@@ -38,7 +38,7 @@ export async function patchProject(project: Project): Promise<Project> {
                 goal = COALESCE($3, goal), max_teams = COALESCE($4, max_teams) \
                 WHERE id = $5 RETURNING *`;
 
-    const result = await db.query(sql, [
+    const result = await db.query<ProjectRow>(sql, [
         project.batchId,
         project.projectName,
         project.goal,
@@ -46,12 +46,12 @@ export async function patchProject(project: Project): Promise<Project> {
         project.id
     ]);
 
-    return result.rows[0];
+    return result.rows.map(Project.from)[0];
 }
 
 export async function deleteProject(id: number): Promise<Project> {
     const sql = `DELETE FROM projects WHERE id = $1 RETURNING *`;
 
-    const result = await db.query<Project>(sql, [id])
-    return result.rows[0];
+    const result = await db.query<ProjectRow>(sql, [id])
+    return result.rows.map(Project.from)[0];
 }

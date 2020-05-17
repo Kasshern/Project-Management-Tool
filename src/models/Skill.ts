@@ -8,14 +8,14 @@ export class Skill {
  *  the structure within the database
  */
 
-/*
+
 static from(obj: SkillRow): Skill {
     const skill = new Skill(
         obj.id, obj.skill_level, obj.technology
     );
     return skill;
 }
-*/
+
 
     constructor( id: number, skillLevel: string, technology: string, ) {
         this.id = id;
@@ -24,10 +24,10 @@ static from(obj: SkillRow): Skill {
     }
 }
 
-/*
+
 export interface SkillRow {
     id: number;
     skill_level: string;
     technology: string;
 }
-*/
+

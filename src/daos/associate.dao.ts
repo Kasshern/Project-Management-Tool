@@ -1,5 +1,5 @@
 import { db } from '../daos/db';
-import { Associate } from '../models/Associate';
+import { Associate, AssociateRow } from '../models/Associate';
 
 /**
  *
@@ -7,27 +7,28 @@ import { Associate } from '../models/Associate';
  */
 export async function getAllAssociates(): Promise<Associate[]> {
     const sql = 'SELECT * FROM associates';
-    const result = await db.query<Associate>(sql, []);
-    return result.rows;
+    const result = await db.query<AssociateRow>(sql, []);
+    return result.rows.map(Associate.from);
 }
 
 export async function getAssociateById(id: number): Promise<Associate> {
     const sql = 'SELECT * FROM associates WHERE id = $1';
 
-    const result = await db.query<Associate>(sql, [id]);
-    return result.rows[0];
+    const result = await db.query<AssociateRow>(sql, [id]);
+    return result.rows.map(Associate.from)[0];
 }
 
 export async function saveAssociate(associate: Associate): Promise<Associate> {
     const sql = `INSERT INTO associates (first_name, last_name, birthdate) \
                 VALUES ($1, $2, $3) RETURNING *`;
 
-    const result = await db.query<Associate>(sql, [
+    const result = await db.query<AssociateRow>(sql, [
         associate.firstName,
         associate.lastName,
         associate.birthdate.toISOString()
     ]);
-    return result.rows[0];
+
+    return result.rows.map(Associate.from)[0];
     }
 
 export async function patchAssociate(associate: Associate): Promise<Associate> {
@@ -37,19 +38,19 @@ export async function patchAssociate(associate: Associate): Promise<Associate> {
 
     const birthdate = associate.birthdate && associate.birthdate.toISOString();
 
-    const result = await db.query(sql, [
+    const result = await db.query<AssociateRow>(sql, [
         associate.firstName,
         associate.lastName,
         birthdate,
         associate.id
     ]);
 
-    return result.rows[0];
+    return result.rows.map(Associate.from)[0];
 }
 
 export async function deleteAssociate(id: number): Promise<Associate> {
     const sql = `DELETE FROM associates WHERE id = $1 RETURNING * `;
 
-    const result = await db.query<Associate>(sql, [id]);
-    return result.rows[0];
+    const result = await db.query<AssociateRow>(sql, [id]);
+    return result.rows.map(Associate.from)[0];
 }

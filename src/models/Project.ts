@@ -9,14 +9,16 @@ export class Project {
  *  Static function for creating a Project instance based on 
  *  the structure within the database
  */
-/*
+
     static from(obj: ProjectRow): Project {
         const project = new Project(
-            obj.id, obj.project_name, obj.goal, obj. max_teams
+            obj.id, obj.batch_id,
+            obj.project_name, obj.goal,
+            obj.max_teams
         );
         return project;
     }
-*/
+
 
     constructor( id: number, batchId: number, projectName: string, goal: string, maxTeams: number) {
         this.id = id;
@@ -27,11 +29,11 @@ export class Project {
     }
 }
 
-/*
+
 export interface ProjectRow {
     id: number;
+    batch_id: number;
     project_name: string;
     goal: string;
     max_teams: number;
 }
-*/

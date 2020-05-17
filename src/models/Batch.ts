@@ -10,14 +10,16 @@ export class Batch {
  *  the structure within the database
  */
 
-/*
+
 static from(obj: BatchRow): Batch {
     const batch = new Batch(
-        obj.id, obj.first_name, obj.last_name, new Date(obj.birthdate)
+        obj.id, obj.trainer_id,
+        obj.batch_name, new Date(obj.start_date),
+        obj.duration_in_days
     );
     return batch;
 }
-*/
+
 
     constructor( id: number, trainerId: number, batchName: string, startDate: Date, durationInDays: string) {
         this.id = id;
@@ -28,14 +30,14 @@ static from(obj: BatchRow): Batch {
     }
 }
 
-/*
+
 export interface BatchRow {
     id: number;
-    trainer_id: string;
+    trainer_id: number;
     batch_name: string;
     start_date: Date;
     duration_in_days: string;
     // email: string;
 }
-*/
+
 

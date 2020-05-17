@@ -9,15 +9,15 @@ export class Associate {
  *  the structure within the database
  */
 
-/*
+
     static from(obj: AssociateRow): Associate {
         const associate = new Associate(
-            obj.id, obj.trainer_id, obj.team_id, obj.first_name,
+            obj.id, obj.first_name,
             obj.last_name, new Date(obj.birthdate)
         );
         return associate;
     }
-*/
+
 
     constructor( id: number, firstName: string,
                 lastName: string, birthdate: Date) {
@@ -28,13 +28,10 @@ export class Associate {
     }
 }
 
-/*
+
 export interface AssociateRow {
     id: number;
-    trainer_id: number;
-    team_id: number;
     first_name: string;
     last_name: string;
     birthdate: Date;
 }
-*/

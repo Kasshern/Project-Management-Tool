@@ -11,14 +11,14 @@ export class Team {
  *  the structure within the database
  */
 
-/*
+
     static from(obj: TeamRow): Team {
         const team = new Team(
             obj.id, obj.project_id, obj.team_name, obj.tech_focus, obj. max_people
         );
         return team;
     }
-*/
+
 
     constructor( id: number, projectId: number, teamName: string, techFocus: string, maxPeople: number) {
         this.id = id;
@@ -29,7 +29,7 @@ export class Team {
     }
 }
 
-/*
+
 export interface TeamRow {
     id: number;
     project_id: number;
@@ -37,4 +37,3 @@ export interface TeamRow {
     tech_focus: string;
     max_people: number;
 }
-*/

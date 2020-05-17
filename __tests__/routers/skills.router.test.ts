@@ -148,3 +148,33 @@ describe('PATCH /skill', () => {
             .expect(404);
     });
 });
+
+describe('DELETE /skill/:id', () => {
+    test('Normal behavior Json with status 200', async () => {
+        mockSkillService.deleteSkill
+            .mockImplementation(async () => ({}));
+
+        await request(app)
+            .delete('/skill/1')
+            .expect(200)
+            .expect('content-type', 'application/json; charset=utf-8')
+    });
+
+    test('No object found (404)', async() => {
+        mockSkillService.deleteSkill
+            .mockImplementation(async () => (0));
+
+        await request(app)
+            .delete('/skill/1')
+            .expect(404);
+    });
+
+    test('500 internal server error', async() => {
+        mockSkillService.deleteSkill
+            .mockImplementation(async () => {throw new Error()});
+
+        await request(app)
+            .delete('/skill/1')
+            .expect(500)
+    });
+});

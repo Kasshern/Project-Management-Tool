@@ -1,5 +1,5 @@
 import { db } from '../daos/db';
-import { Trainer } from '../models/Trainer';
+import { Trainer, TrainerRow } from '../models/Trainer';
 
 /**
  * Doc Notes
@@ -8,28 +8,28 @@ import { Trainer } from '../models/Trainer';
 export async function getAllTrainers(): Promise<Trainer[]> {
     const sql = 'SELECT * FROM trainers';
 
-    const result = await db.query<Trainer>(sql, []);
-    return result.rows;
+    const result = await db.query<TrainerRow>(sql, []);
+    return result.rows.map(Trainer.from);
     }
 
 export async function getTrainerById(id: number): Promise<Trainer> {
     const sql = 'SELECT * FROM trainers WHERE id = $1';
 
-    const result = await db.query<Trainer>(sql, [id]);
-        return result.rows[0];
+    const result = await db.query<TrainerRow>(sql, [id]);
+        return result.rows.map(Trainer.from)[0];
 }
 
 export async function saveTrainer(trainer: Trainer): Promise<Trainer> {
     const sql = `INSERT INTO trainers (first_name, last_name, birthdate) \
 VALUES ($1, $2, $3) RETURNING *`;
 
-    const result = await db.query<Trainer>(sql, [
+    const result = await db.query<TrainerRow>(sql, [
         trainer.firstName,
         trainer.lastName,
         trainer.birthdate.toISOString()
     ]);
 
-    return result.rows[0];
+    return result.rows.map(Trainer.from)[0];
 }
 
 export async function patchTrainer(trainer: Trainer): Promise<Trainer> {
@@ -39,21 +39,21 @@ WHERE id = $4 RETURNING *`;
 
     const birthdate = trainer.birthdate && trainer.birthdate.toISOString();
 
-    const result = await db.query<Trainer>(sql, [
+    const result = await db.query<TrainerRow>(sql, [
         trainer.firstName,
         trainer.lastName,
         birthdate,
         trainer.id
         
     ]);
-    return result.rows[0];
+    return result.rows.map(Trainer.from)[0];
 }
 
 export async function deleteTrainer(id: number): Promise<Trainer> {
     console.log(id);
 
     const sql = `DELETE FROM trainers WHERE id = $1 RETURNING *`;
-    const result = await db.query<Trainer>(sql, [id]);
+    const result = await db.query<TrainerRow>(sql, [id]);
 
-    return result.rows[0];
+    return result.rows.map(Trainer.from)[0];
 }

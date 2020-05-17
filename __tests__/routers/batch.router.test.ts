@@ -158,3 +158,33 @@ describe('PATCH /batch', () => {
             .expect(404);
     });
 });
+
+describe('DELETE /batch/:id', () => {
+    test('Normal behavior Json with status 200', async () => {
+        mockBatchService.deleteBatch
+            .mockImplementation(async () => ({}));
+
+        await request(app)
+            .delete('/batch/1')
+            .expect(200)
+            .expect('content-type', 'application/json; charset=utf-8')
+    });
+
+    test('No object found (404)', async() => {
+        mockBatchService.deleteBatch
+            .mockImplementation(async () => (0));
+
+        await request(app)
+            .delete('/batch/1')
+            .expect(404);
+    });
+
+    test('500 internal server error', async() => {
+        mockBatchService.deleteBatch
+            .mockImplementation(async () => {throw new Error()});
+
+        await request(app)
+            .delete('/batch/1')
+            .expect(500)
+    });
+});

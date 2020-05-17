@@ -155,3 +155,33 @@ describe('PATCH /associate', () => {
     });
 
 });
+
+describe('DELETE /associate/:id', () => {
+    test('Normal behavior Json with status 200', async () => {
+        mockAssociateService.deleteAssociate
+            .mockImplementation(async () => ({}));
+
+        await request(app)
+            .delete('/associate/1')
+            .expect(200)
+            .expect('content-type', 'application/json; charset=utf-8')
+    });
+
+    test('No object found (404)', async() => {
+        mockAssociateService.deleteAssociate
+            .mockImplementation(async () => (0));
+
+        await request(app)
+            .delete('/associate/1')
+            .expect(404);
+    });
+
+    test('500 internal server error', async() => {
+        mockAssociateService.deleteAssociate
+            .mockImplementation(async () => {throw new Error()});
+
+        await request(app)
+            .delete('/associate/1')
+            .expect(500)
+    });
+});

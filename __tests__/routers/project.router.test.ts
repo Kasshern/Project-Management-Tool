@@ -162,3 +162,33 @@ describe('PATCH /project', () => {
             .expect(404);
     });
 });
+
+describe('DELETE /project/:id', () => {
+    test('Normal behavior Json with status 200', async () => {
+        mockProjectService.deleteProject
+            .mockImplementation(async () => ({}));
+
+        await request(app)
+            .delete('/project/1')
+            .expect(200)
+            .expect('content-type', 'application/json; charset=utf-8')
+    });
+
+    test('No object found (404)', async() => {
+        mockProjectService.deleteProject
+            .mockImplementation(async () => (0));
+
+        await request(app)
+            .delete('/project/1')
+            .expect(404);
+    });
+
+    test('500 internal server error', async() => {
+        mockProjectService.deleteProject
+            .mockImplementation(async () => {throw new Error()});
+
+        await request(app)
+            .delete('/project/1')
+            .expect(500)
+    });
+});
