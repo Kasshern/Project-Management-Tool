@@ -22,6 +22,11 @@ export async function getAssociateById(id: number): Promise<Associate> {
 }
 
 export async function getSkillsByAssociateId(id: number): Promise<Skill[]> {
+    const doExists: boolean = await associateExists(id);
+    if (!doExists) {
+        return undefined;
+    }
+    
     const sql = 'SELECT skills.* FROM associates \
     LEFT JOIN associate_skills ON associates.id = associate_skills.associate_id \
     INNER JOIN skills ON associate_skills.skill_id = skills.id WHERE associates.id = $1';
@@ -85,4 +90,14 @@ export async function deleteAssociateSkill(id1: number, id2: number): Promise<As
 
     const result = await db.query<AssociateSkillRow>(sql, [id1, id2]);
     return result.rows.map(AssociateSkill.from)[0];
+}
+
+export async function associateExists(id: number): Promise<boolean> {
+    const sql = `SELECT EXISTS(SELECT id FROM associates WHERE id = $1);`;
+    const result = await db.query<Exists>(sql, [id]);
+    return result.rows[0].exists;
+}
+
+interface Exists {
+    exists: boolean;
 }

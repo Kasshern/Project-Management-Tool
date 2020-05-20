@@ -77,7 +77,7 @@ export async function getTeamsByTrainerId(id1: number, id2: number): Promise<Tea
     
     const sql = 'SELECT teams.* FROM trainers \
     LEFT JOIN batches ON trainers.id = batches.trainer_id \
-    INNER JOIN projects ON batches.id = projects.batch_id \
+    LEFT JOIN projects ON batches.id = projects.batch_id \
     INNER JOIN teams ON projects.id = teams.project_id WHERE trainers.id = $1 AND projects.id = $2';
 
     const result = await db.query<TeamRow>(sql, [id1, id2]);

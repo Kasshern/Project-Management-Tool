@@ -6,7 +6,6 @@ import { Associate, AssociateRow } from '../models/Associate';
 
 /**
  * Doc Notes
- *
  */
 export async function getAllTeams(): Promise<Team[]> {
     const sql = 'SELECT * FROM teams';
@@ -30,6 +29,11 @@ export async function getAllTeamAssignments(): Promise<TeamAssignment[]> {
 }
 
 export async function getAssociatesByTeamId(id: number): Promise<Associate[]> {
+    const doExists: boolean = await teamExists(id);
+    if (!doExists) {
+        return undefined;
+    }
+
     const sql = 'SELECT associates.* FROM teams \
     LEFT JOIN team_assignments ON teams.id = team_assignments.team_id \
     INNER JOIN associates ON team_assignments.associate_id = associates.id WHERE teams.id = $1';
@@ -91,4 +95,14 @@ export async function deleteTeamAssignment(id1: number, id2: number): Promise<Te
 
     const result = await db.query<TeamAssignmentRow>(sql, [id1, id2]);
     return result.rows.map(TeamAssignment.from)[0];
+}
+
+export async function teamExists(id: number): Promise<boolean> {
+    const sql = `SELECT EXISTS(SELECT id FROM teams WHERE id = $1);`;
+    const result = await db.query<Exists>(sql, [id]);
+    return result.rows[0].exists;
+}
+
+interface Exists {
+    exists: boolean;
 }
