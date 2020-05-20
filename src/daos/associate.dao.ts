@@ -35,7 +35,6 @@ export async function getSkillsByAssociateId(id: number): Promise<Skill[]> {
         return result.rows.map(Skill.from);
 }
 
-
 export async function saveAssociate(associate: Associate): Promise<Associate> {
     const sql = `INSERT INTO associates (first_name, last_name, birthdate) \
                 VALUES ($1, $2, $3) RETURNING *`;

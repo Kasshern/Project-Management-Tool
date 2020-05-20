@@ -4,7 +4,6 @@ import { Project, ProjectRow } from '../models/Project';
 
 /**
  * Doc Notes
- *
  */
 export async function getAllProjects(): Promise<Project[]> {
     const sql = 'SELECT * FROM projects';

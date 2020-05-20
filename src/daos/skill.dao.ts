@@ -4,7 +4,6 @@ import { Skill, SkillRow } from '../models/Skill';
 
 /**
  * Doc Notes
- *
  */
 export async function getAllSkills(): Promise<Skill[]> {
     const sql = 'SELECT * FROM skills';

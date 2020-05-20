@@ -8,7 +8,6 @@ import { Associate, AssociateRow } from '../models/Associate';
 
 /**
  * Doc Notes
- *
  */
 
 export async function getAllTrainers(): Promise<Trainer[]> {

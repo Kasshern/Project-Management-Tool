@@ -4,8 +4,6 @@ import { Batch, BatchRow } from '../models/Batch';
 
 /**
  * Doc Notes
- *
- *
  */
 export async function getAllBatches(): Promise<Batch[]> {
     const sql = 'SELECT * FROM batches';
