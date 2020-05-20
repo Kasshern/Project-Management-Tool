@@ -23,15 +23,6 @@ describe('GET /project', () => {
             .expect('content-type', 'application/json; charset=utf-8');
     });
 
-    test('No object found (404)', async() => {
-        mockProjectService.getAllProjects
-            .mockImplementation(async () => (0));
-
-        await request(app)
-            .get('/project')
-            .expect(404);
-    });
-
     test('Returns normally under normal circumstances', async () => {
         mockProjectService.getAllProjects
             .mockImplementation(async () => {throw new Error()});
@@ -40,6 +31,36 @@ describe('GET /project', () => {
             .expect(500);
     });
 });
+
+describe('GET /project/:id', () => {
+    test('Normal behavior Json with status 200', async () => {
+        mockProjectService.getProjectById
+            .mockImplementation(async () => ({}));
+
+        await request(app)
+            .get('/project/1')
+            .expect(200)
+            .expect('content-type', 'application/json; charset=utf-8')
+    });
+
+    test('No object found (404)', async() => {
+        mockProjectService.getProjectById
+            .mockImplementation(async () => (undefined));
+
+        await request(app)
+            .get('/project/1')
+            .expect(404);
+    });
+
+    test('500 internal server error', async() => {
+        mockProjectService.getProjectById
+            .mockImplementation(async () => {throw new Error()});
+
+        await request(app)
+            .get('/project/1')
+            .expect(500)
+    })
+})
 
 describe('POST /project', () => {
     test('Successful creation should return 201 status', async () => {
@@ -78,36 +99,6 @@ describe('POST /project', () => {
     });
 });
 
-describe('GET /project/:id', () => {
-    test('Normal behavior Json with status 200', async () => {
-        mockProjectService.getProjectById
-            .mockImplementation(async () => ({}));
-
-        await request(app)
-            .get('/project/1')
-            .expect(200)
-            .expect('content-type', 'application/json; charset=utf-8')
-    });
-
-    test('No object found (404)', async() => {
-        mockProjectService.getProjectById
-            .mockImplementation(async () => (0));
-
-        await request(app)
-            .get('/project/1')
-            .expect(404);
-    });
-
-    test('500 internal server error', async() => {
-        mockProjectService.getProjectById
-            .mockImplementation(async () => {throw new Error()});
-
-        await request(app)
-            .get('/project/1')
-            .expect(500)
-    })
-})
-
 describe('PATCH /project', () => {
     test('Successful update should return 201 status', async () => {
 
@@ -124,7 +115,7 @@ describe('PATCH /project', () => {
         await request(app)
             .patch('/project')
             .send(payload)
-            .expect(201)
+            .expect(200)
             .expect('content-type', 'application/json; charset=utf-8')
     });
 
@@ -148,7 +139,7 @@ describe('PATCH /project', () => {
 
     test('No object found (404)', async() => {
         mockProjectService.patchProject
-            .mockImplementation(async () => (0));
+            .mockImplementation(async () => (undefined));
 
         const payload = {
             batchId: 100,
@@ -176,7 +167,7 @@ describe('DELETE /project/:id', () => {
 
     test('No object found (404)', async() => {
         mockProjectService.deleteProject
-            .mockImplementation(async () => (0));
+            .mockImplementation(async () => (undefined));
 
         await request(app)
             .delete('/project/1')

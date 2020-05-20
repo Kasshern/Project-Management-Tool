@@ -4,21 +4,24 @@ export class Team {
     teamName: string;
     techFocus: string;
     maxPeople: number;
-   // numberOfPeople: number;
 
 /**
- *  Static function for creating a Team instance based on 
- *  the structure within the database
+ *  Static function for creating a Team instance based on
+ *  the structure within the database. This accepts an object of
+ *  type defined by the interface TeamRow and uses that to
+ * create an instance of Team.
  */
-
 
     static from(obj: TeamRow): Team {
         const team = new Team(
-            obj.id, obj.project_id, obj.team_name, obj.tech_focus, obj. max_people
+            obj.id,
+            obj.project_id,
+            obj.team_name,
+            obj.tech_focus,
+            obj. max_people
         );
         return team;
     }
-
 
     constructor( id: number, projectId: number, teamName: string, techFocus: string, maxPeople: number) {
         this.id = id;
@@ -28,7 +31,6 @@ export class Team {
         this.maxPeople = maxPeople;
     }
 }
-
 
 export interface TeamRow {
     id: number;

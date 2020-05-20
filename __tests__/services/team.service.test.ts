@@ -1,6 +1,7 @@
 import * as teamService from '../../src/services/team.service';
 import * as teamDao from '../../src/daos/team.dao';
 import { Team } from '../../src/models/Team';
+import { TeamAssignment } from '../../src/models/teamAssignment';
 
 
 jest.mock('../../src/daos/team.dao');
@@ -189,5 +190,77 @@ describe('patchTeam', () => {
         } catch(err) {
             expect(err).toBeTruthy();
         }
+    });
+});
+
+describe('saveTeamAssignment', () => {
+    test('422 returned if no teamId provided', async () => {
+        expect.assertions(1);
+
+        mockTeamDao.saveTeamAssignment
+            .mockImplementation(() => ({}));
+
+        const payload = {
+            associateId: 100
+        }
+
+        try {
+            await teamService.saveTeamAssignment(payload);
+            fail('teamService.saveTeamAssignment did not throw expected error');
+        } catch(err) {
+            expect(err).toBeDefined();
+        }
+    });
+
+    test('422 returned if no associateId is provided', async () => {
+        expect.assertions(1);
+        mockTeamDao.saveTeamAssignment
+            .mockImplementation(() => ({}));
+
+        const payload = {
+            teamId: 100
+        }
+
+        try {
+            await teamService.saveTeamAssignment(payload);
+            fail('teamService.saveTeam did not throw expected error');
+        } catch(err) {
+            expect(err).toBeDefined();
+        }
+    });
+
+    test('Input object transformed to Team object', async () => {
+        expect.assertions(2);
+
+        mockTeamDao.saveTeamAssignment
+            .mockImplementation(o => o);
+
+        const payload = {
+            teamId: 100,
+            associateId: 100
+        };
+
+        const result = await teamService.saveTeamAssignment(payload);
+
+        expect(payload).not.toBeInstanceOf(TeamAssignment);
+        expect(result).toBeInstanceOf(TeamAssignment);
+    });
+
+
+    test('Extraneous fields in input are not in output', async () => {
+        expect.assertions(1);
+
+        mockTeamDao.saveTeamAssignment
+            .mockImplementation(o => o);
+
+        const payload = {
+            teamId: 100,
+            associateId: 100,
+            foofoo: true
+        };
+
+        const result = await teamService.saveTeamAssignment(payload) as any;
+
+        expect(result.foofoo).not.toBeDefined();
     });
 });

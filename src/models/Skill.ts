@@ -5,17 +5,19 @@ export class Skill {
 
 /**
  *  Static function for creating a Skill instance based on
- *  the structure within the database
+ *  the structure within the database. This accepts an object of
+ *  type defined by the interface SkillRow and uses that to
+ * create an instance of Skill.
  */
-
 
 static from(obj: SkillRow): Skill {
     const skill = new Skill(
-        obj.id, obj.skill_level, obj.technology
+        obj.id,
+        obj.skill_level,
+        obj.technology
     );
     return skill;
 }
-
 
     constructor( id: number, skillLevel: string, technology: string, ) {
         this.id = id;
@@ -23,7 +25,6 @@ static from(obj: SkillRow): Skill {
         this.technology = technology;
     }
 }
-
 
 export interface SkillRow {
     id: number;

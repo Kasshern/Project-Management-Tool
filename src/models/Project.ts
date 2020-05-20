@@ -4,21 +4,24 @@ export class Project {
     projectName: string;
     goal: string;
     maxTeams: number;
-    // numberOfTeams: number;
+
 /**
- *  Static function for creating a Project instance based on 
- *  the structure within the database
+ *  Static function for creating a Project instance based on
+ *  the structure within the database. This accepts an object of
+ *  type defined by the interface ProjectRow and uses that to
+ * create an instance of Project.
  */
 
     static from(obj: ProjectRow): Project {
         const project = new Project(
-            obj.id, obj.batch_id,
-            obj.project_name, obj.goal,
+            obj.id,
+            obj.batch_id,
+            obj.project_name,
+            obj.goal,
             obj.max_teams
         );
         return project;
     }
-
 
     constructor( id: number, batchId: number, projectName: string, goal: string, maxTeams: number) {
         this.id = id;
@@ -28,7 +31,6 @@ export class Project {
         this.maxTeams = maxTeams;
     }
 }
-
 
 export interface ProjectRow {
     id: number;

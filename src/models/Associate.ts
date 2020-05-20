@@ -5,19 +5,21 @@ export class Associate {
     birthdate: Date;
 
 /**
- *  Static function for creating an Associate  instance based on
- *  the structure within the database
+ *  Static function for creating an Associate instance based on
+ *  the structure within the database. This accepts an object of
+ *  type defined by the interface AssociateRow and uses that to 
+ * create an instance of Associate.
  */
-
 
     static from(obj: AssociateRow): Associate {
         const associate = new Associate(
-            obj.id, obj.first_name,
-            obj.last_name, new Date(obj.birthdate)
+            obj.id,
+            obj.first_name,
+            obj.last_name,
+            new Date(obj.birthdate)
         );
         return associate;
     }
-
 
     constructor( id: number, firstName: string,
                 lastName: string, birthdate: Date) {
@@ -27,7 +29,6 @@ export class Associate {
         this.birthdate = birthdate;
     }
 }
-
 
 export interface AssociateRow {
     id: number;

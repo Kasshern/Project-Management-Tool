@@ -22,19 +22,66 @@ describe('GET /associate', () => {
             .expect('content-type', 'application/json; charset=utf-8');
     });
 
-    test('No object found (404)', async() => {
-        mockAssociateService.getAllAssociates
-            .mockImplementation(async () => (0));
-
-        await request(app)
-            .get('/associate')
-            .expect(404);
-    });
-
     test('Returns normally under normal circumstances', async () => {
         mockAssociateService.getAllAssociates.mockImplementation(async () => {throw new Error()});
         await request(app)
             .get('/associate')
+            .expect(500);
+    });
+});
+
+describe('GET /associate/:id', () => {
+    test('Normal behavior Json with status 200', async () => {
+        mockAssociateService.getAssociateById
+            .mockImplementation(async () => ({}));
+
+        await request(app)
+            .get('/associate/1')
+            .expect(200)
+            .expect('content-type', 'application/json; charset=utf-8')
+    });
+
+    test('No object found (404)', async() => {
+        mockAssociateService.getAssociateById
+            .mockImplementation(async () => (undefined));
+
+        await request(app)
+            .get('/associate/blahblahblah')
+            .expect(404);
+    });
+
+    test('500 internal server error', async() => {
+        mockAssociateService.getAssociateById
+            .mockImplementation(async () => {throw new Error()});
+
+        await request(app)
+            .get('/associate/99')
+            .expect(500)
+    })
+})
+
+describe('GET /associate/:id/skill', () => {
+    test('Returns normally under normal circumstances', async () => {
+        mockAssociateService.getSkillsByAssociateId.mockImplementation(async () => []);
+        await request(app)
+            .get('/associate/100/skill')
+            .expect(200)
+            .expect('content-type', 'application/json; charset=utf-8');
+    });
+
+    test('No object found (404)', async() => {
+        mockAssociateService.getSkillsByAssociateId
+            .mockImplementation(async () => (undefined));
+
+        await request(app)
+            .get('/associate/100/skill')
+            .expect(404);
+    });
+
+    test('Returns normally under normal circumstances', async () => {
+        mockAssociateService.getSkillsByAssociateId.mockImplementation(async () => {throw new Error()});
+        await request(app)
+            .get('/associate/100/skill')
             .expect(500);
     });
 });
@@ -71,35 +118,35 @@ describe('POST /associate', () => {
     });
 });
 
-describe('GET /associate/:id', () => {
-    test('Normal behavior Json with status 200', async () => {
-        mockAssociateService.getAssociateById
-            .mockImplementation(async () => ({}));
+describe('POST /associate/assignSkill', () => {
+    test('Successful creation should return 201 status', async () => {
+        mockAssociateService.saveAssociateSkill.mockImplementation(async () => ({}));
+        const payload = {
+            associateId: 100,
+            skillId: 100
+        };
 
         await request(app)
-            .get('/associate/1')
-            .expect(200)
+            .post('/associate/assignSkill')
+            .send(payload)
+            .expect(201)
             .expect('content-type', 'application/json; charset=utf-8')
     });
 
-    test('No object found (404)', async() => {
-        mockAssociateService.getAssociateById
-            .mockImplementation(async () => (0));
+    test('Should return 500 when encountering an error', async () => {
+        mockAssociateService.saveAssociateSkill.mockImplementation(async () => {throw new Error()});
+
+        const payload = {
+            associateId: 100,
+            skillId: 100
+        };
 
         await request(app)
-            .get('/associate/blahblahblah')
-            .expect(404);
+            .post('/associate/assignSkill')
+            .send(payload)
+            .expect(500);
     });
-
-    test('500 internal server error', async() => {
-        mockAssociateService.getAssociateById
-            .mockImplementation(async () => {throw new Error()});
-
-        await request(app)
-            .get('/associate/99')
-            .expect(500)
-    })
-})
+});
 
 describe('PATCH /associate', () => {
     test('Successful update should return 201 status', async () => {
@@ -117,13 +164,13 @@ describe('PATCH /associate', () => {
         await request(app)
             .patch('/associate')
             .send(payload)
-            .expect(201)
+            .expect(200)
             .expect('content-type', 'application/json; charset=utf-8')
     });
 
     test('No object found (404)', async() => {
         mockAssociateService.patchAssociate
-            .mockImplementation(async () => (0));
+            .mockImplementation(async () => (undefined));
 
         const payload = {
             firstName: 'John',
@@ -169,7 +216,7 @@ describe('DELETE /associate/:id', () => {
 
     test('No object found (404)', async() => {
         mockAssociateService.deleteAssociate
-            .mockImplementation(async () => (0));
+            .mockImplementation(async () => (undefined));
 
         await request(app)
             .delete('/associate/1')
@@ -185,3 +232,5 @@ describe('DELETE /associate/:id', () => {
             .expect(500)
     });
 });
+
+

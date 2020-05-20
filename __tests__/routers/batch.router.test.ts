@@ -22,15 +22,6 @@ describe('GET /batch', () => {
             .expect('content-type', 'application/json; charset=utf-8');
     });
 
-    test('No object found (404)', async() => {
-        mockBatchService.getAllBatches
-            .mockImplementation(async () => (0));
-
-        await request(app)
-            .get('/batch')
-            .expect(404);
-    });
-
     test('Returns normally under normal circumstances', async () => {
         mockBatchService.getAllBatches.mockImplementation(async () => {throw new Error()});
         await request(app)
@@ -38,6 +29,36 @@ describe('GET /batch', () => {
             .expect(500);
     });
 });
+
+describe('GET /batch/:id', () => {
+    test('Normal behavior Json with status 200', async () => {
+        mockBatchService.getBatchById
+            .mockImplementation(async () => ({}));
+
+        await request(app)
+            .get('/batch/1')
+            .expect(200)
+            .expect('content-type', 'application/json; charset=utf-8')
+    });
+
+    test('No object found (404)', async() => {
+        mockBatchService.getBatchById
+            .mockImplementation(async () => (undefined));
+
+        await request(app)
+            .get('/batch/1')
+            .expect(404);
+    });
+
+    test('500 internal server error', async() => {
+        mockBatchService.getBatchById
+            .mockImplementation(async () => {throw new Error()});
+
+        await request(app)
+            .get('/batch/1')
+            .expect(500)
+    })
+})
 
 describe('POST /batch', () => {
     test('Successful creation should return 201 status', async () => {
@@ -74,35 +95,7 @@ describe('POST /batch', () => {
     });
 });
 
-describe('GET /batch/:id', () => {
-    test('Normal behavior Json with status 200', async () => {
-        mockBatchService.getBatchById
-            .mockImplementation(async () => ({}));
 
-        await request(app)
-            .get('/batch/1')
-            .expect(200)
-            .expect('content-type', 'application/json; charset=utf-8')
-    });
-
-    test('No object found (404)', async() => {
-        mockBatchService.getBatchById
-            .mockImplementation(async () => (0));
-
-        await request(app)
-            .get('/batch/1')
-            .expect(404);
-    });
-
-    test('500 internal server error', async() => {
-        mockBatchService.getBatchById
-            .mockImplementation(async () => {throw new Error()});
-
-        await request(app)
-            .get('/batch/1')
-            .expect(500)
-    })
-})
 
 describe('PATCH /batch', () => {
     test('Successful update should return 201 status', async () => {
@@ -120,7 +113,7 @@ describe('PATCH /batch', () => {
         await request(app)
             .patch('/batch')
             .send(payload)
-            .expect(201)
+            .expect(200)
             .expect('content-type', 'application/json; charset=utf-8')
     });
 
@@ -144,7 +137,7 @@ describe('PATCH /batch', () => {
 
     test('No object found (404)', async() => {
         mockBatchService.patchBatch
-            .mockImplementation(async () => (0));
+            .mockImplementation(async () => (undefined));
 
         const payload = {
             trainerId: 100,
@@ -172,7 +165,7 @@ describe('DELETE /batch/:id', () => {
 
     test('No object found (404)', async() => {
         mockBatchService.deleteBatch
-            .mockImplementation(async () => (0));
+            .mockImplementation(async () => (undefined));
 
         await request(app)
             .delete('/batch/1')

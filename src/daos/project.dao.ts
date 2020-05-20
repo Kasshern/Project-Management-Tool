@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import { db } from '../daos/db';
 import { Project, ProjectRow } from '../models/Project';
 

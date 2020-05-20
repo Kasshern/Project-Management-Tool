@@ -95,7 +95,6 @@ describe('saveTrainer', () => {
         };
 
         const result = await trainerService.saveTrainer(payload);
-
         expect(result.id).not.toBe(payload.id);
     });
 
@@ -163,3 +162,73 @@ describe('patchTrainer', () => {
         }
     });
 });
+
+describe('getAllTrainers', () => {
+    test('succesful get of all trainers', async () => {
+        expect.assertions(1);
+
+        mockTrainerDao.getAllTrainers
+            .mockImplementation(() => ({}));
+
+
+        const result = await trainerService.getAllTrainers();
+            expect(result).toBeDefined();
+        });
+    });
+
+describe('getTrainerById', () => {
+    test('succesful get a trainer by ID', async () => {
+        expect.assertions(1);
+
+        mockTrainerDao.getTrainerById
+            .mockImplementation(() => ({}));
+
+        const id: number = 100;
+
+        const result = await trainerService.getTrainerById(id);
+            expect(result).toBeDefined();
+        });
+
+});
+
+/*
+describe('getBatchesByTrainerId', () => {
+    test('succesful get of all trainers', async () => {
+        expect.assertions(1);
+
+        mockTrainerDao.getAllTrainers
+            .mockImplementation(() => ({}));
+
+
+        const result = await trainerService.getAllTrainers();
+            expect(result).toBeDefined();
+        });
+    });
+
+    
+describe('getProjectsByTrainerId', () => {
+    test('succesful get of all trainers', async () => {
+        expect.assertions(1);
+
+        mockTrainerDao.getAllTrainers
+            .mockImplementation(() => ({}));
+
+
+        const result = await trainerService.getAllTrainers();
+            expect(result).toBeDefined();
+        });
+    });
+
+describe('getTeamsByTrainerId', () => {
+    test('succesful get of all trainers', async () => {
+        expect.assertions(1);
+
+        mockTrainerDao.getAllTrainers
+            .mockImplementation(() => ({}));
+
+
+        const result = await trainerService.getAllTrainers();
+            expect(result).toBeDefined();
+        });
+    });
+*/

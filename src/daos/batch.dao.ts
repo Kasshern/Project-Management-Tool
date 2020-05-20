@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import { db } from '../daos/db';
 import { Batch, BatchRow } from '../models/Batch';
 

@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import { db } from '../daos/db';
 import { Skill, SkillRow } from '../models/Skill';
 
@@ -43,7 +44,7 @@ technology = COALESCE($2, technology) WHERE id = $3 RETURNING *`;
 }
 
 export async function deleteSkill(id: number): Promise<Skill> {
-    const sql = `DELETE FROM associate_skills WHERE skill_id = $1 RETURNING *`;
+    const sql = `DELETE FROM skills WHERE id = $1 RETURNING *`;
 
     const result = await db.query<SkillRow>(sql, [id]);
     return result.rows.map(Skill.from)[0];

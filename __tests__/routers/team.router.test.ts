@@ -24,15 +24,6 @@ describe('GET /team', () => {
             .expect('content-type', 'application/json; charset=utf-8');
     });
 
-    test('No object found (404)', async() => {
-        mockTeamService.getAllTeams
-            .mockImplementation(async () => (0));
-
-        await request(app)
-            .get('/team')
-            .expect(404);
-    });
-
     test('Returns normally under normal circumstances', async () => {
         mockTeamService.getAllTeams
             .mockImplementation(async () => {throw new Error()});
@@ -43,6 +34,87 @@ describe('GET /team', () => {
     });
     
 });
+
+describe('GET /team/:id', () => {
+    test('Normal behavior Json with status 200', async () => {
+        mockTeamService.getTeamById
+            .mockImplementation(async () => ({}));
+
+        await request(app)
+            .get('/team/1')
+            .expect(200)
+            .expect('content-type', 'application/json; charset=utf-8')
+    });
+
+    test('No object found (404)', async() => {
+        mockTeamService.getTeamById
+            .mockImplementation(async () => (undefined));
+
+        await request(app)
+            .get('/team/blahblahblah')
+            .expect(404);
+    });
+
+    test('500 internal server error', async() => {
+        mockTeamService.getTeamById
+            .mockImplementation(async () => {throw new Error()});
+
+        await request(app)
+            .get('/team/99')
+            .expect(500)
+    })
+})
+
+describe('GET /team/existing/assignment', () => {
+    test('Normal behavior Json with status 200', async () => {
+        mockTeamService.getAllTeamAssignments
+            .mockImplementation(async () => ({}));
+
+        await request(app)
+            .get('/team/existing/assignment')
+            .expect(200)
+            .expect('content-type', 'application/json; charset=utf-8')
+    });
+
+    test('500 internal server error', async() => {
+        mockTeamService.getAllTeamAssignments
+            .mockImplementation(async () => {throw new Error()});
+
+        await request(app)
+            .get('/team/existing/assignment')
+            .expect(500)
+    })
+})
+
+describe('GET /team/:id/associate', () => {
+    test('Normal behavior Json with status 200', async () => {
+        mockTeamService.getAssociatesByTeamId
+            .mockImplementation(async () => ({}));
+
+        await request(app)
+            .get('/team/100/associate')
+            .expect(200)
+            .expect('content-type', 'application/json; charset=utf-8')
+    });
+
+    test('No object found (404)', async() => {
+        mockTeamService.getAssociatesByTeamId
+            .mockImplementation(async () => (undefined));
+
+        await request(app)
+            .get('/team/100/associate')
+            .expect(404);
+    });
+
+    test('500 internal server error', async() => {
+        mockTeamService.getAssociatesByTeamId
+            .mockImplementation(async () => {throw new Error()});
+
+        await request(app)
+            .get('/team/100/associate')
+            .expect(500)
+    })
+})
 
 describe('POST /team', () => {
     test('Successful creation should return 201 status', async () => {
@@ -80,35 +152,37 @@ describe('POST /team', () => {
     });
 });
 
-describe('GET /team/:id', () => {
-    test('Normal behavior Json with status 200', async () => {
-        mockTeamService.getTeamById
+describe('POST /team/assignment', () => {
+    test('Successful creation should return 201 status', async () => {
+        mockTeamService.saveTeamAssignment
             .mockImplementation(async () => ({}));
 
+            const payload = {
+            teamId: 100,
+            associateId: 100
+        };
+
         await request(app)
-            .get('/team/1')
-            .expect(200)
+            .post('/team/assignment')
+            .send(payload)
+            .expect(201)
             .expect('content-type', 'application/json; charset=utf-8')
     });
 
-    test('No object found (404)', async() => {
-        mockTeamService.getTeamById
-            .mockImplementation(async () => (0));
+    test('Should return 500 when encountering an error', async () => {
+        mockTeamService.saveTeamAssignment.mockImplementation(async () => {throw new Error()});
+
+        const payload = {
+            teamId: 100,
+            associateId: 100
+        };
 
         await request(app)
-            .get('/team/blahblahblah')
-            .expect(404);
+            .post('/team/assignment')
+            .send(payload)
+            .expect(500);
     });
-
-    test('500 internal server error', async() => {
-        mockTeamService.getTeamById
-            .mockImplementation(async () => {throw new Error()});
-
-        await request(app)
-            .get('/team/99')
-            .expect(500)
-    })
-})
+});
 
 describe('PATCH /team', () => {
     test('Successful update should return 201 status', async () => {
@@ -126,7 +200,7 @@ describe('PATCH /team', () => {
         await request(app)
             .patch('/team')
             .send(payload)
-            .expect(201)
+            .expect(200)
             .expect('content-type', 'application/json; charset=utf-8')
     });
 
@@ -150,7 +224,7 @@ describe('PATCH /team', () => {
 
     test('No object found (404)', async() => {
         mockTeamService.patchTeam
-            .mockImplementation(async () => (0));
+            .mockImplementation(async () => (undefined));
 
         const payload = {
             projectId: 1,
@@ -178,7 +252,7 @@ describe('DELETE /team/:id', () => {
 
     test('No object found (404)', async() => {
         mockTeamService.deleteTeam
-            .mockImplementation(async () => (0));
+            .mockImplementation(async () => (undefined));
 
         await request(app)
             .delete('/team/1')
@@ -194,3 +268,5 @@ describe('DELETE /team/:id', () => {
             .expect(500)
     });
 });
+
+

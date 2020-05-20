@@ -4,26 +4,22 @@ import { Skill } from '../models/Skill';
 
 export const skillRouter = express.Router();
 
+// Retrieves an Array of all skills
 skillRouter.get('', async (request, response, next) => {
-
     let skills: Skill[];
 
     try {
         skills = await skillService.getAllSkills();
+        response.json(skills);
+
     } catch (err) {
-        console.log(err);
         response.sendStatus(500);
         return;
-    }
-
-    if (!skills) {
-        response.sendStatus(404);
-    } else {
-        response.json(skills);
     }
     next();
 });
 
+// Retrieves a single skill object by ID
 skillRouter.get('/:id', async (request, response, next) => {
     const id: number = parseInt(request.params.id);
 
@@ -44,23 +40,22 @@ skillRouter.get('/:id', async (request, response, next) => {
     next();
 });
 
+// Creates a new skill
 skillRouter.post('', async (request, response, next) => {
     const skill = request.body;
     let newSkill: Skill;
     try {
         newSkill = await skillService.saveSkill(skill);
+        response.status(201);
+        response.json(newSkill);
     } catch (err) {
         response.sendStatus(500);
         return;
     }
-
-    if (newSkill) {
-        response.status(201);
-        response.json(newSkill);
-    }
     next();
 });
 
+// Updates an existing skill
 skillRouter.patch('', async (request, response, next) => {
     const skill = request.body;
     let updatedSkill: Skill;
@@ -75,12 +70,13 @@ skillRouter.patch('', async (request, response, next) => {
     if (!updatedSkill) {
         response.sendStatus(404);
     } else {
-        response.status(201);
+        response.status(200);
         response.json(updatedSkill);
     }
     next();
 });
 
+// Deletes an existing skill
 skillRouter.delete('/:id', async (request, response, next) => {
     const id = parseInt(request.params.id);
     let deletedSkill: Skill;
@@ -95,6 +91,7 @@ skillRouter.delete('/:id', async (request, response, next) => {
     if (!deletedSkill) {
         response.sendStatus(404);
     } else {
+        response.status(200);
         response.json(deletedSkill);
     }
     next();

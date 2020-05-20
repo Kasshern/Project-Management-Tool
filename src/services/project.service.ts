@@ -1,5 +1,6 @@
 import { Project } from '../models/Project';
 import * as projectDao from '../daos/project.dao';
+import { Team } from '../models/Team';
 
 
 export function getAllProjects(): Promise<Project[]> {

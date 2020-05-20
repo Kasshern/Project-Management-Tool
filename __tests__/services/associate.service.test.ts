@@ -1,6 +1,7 @@
 import * as associateService from '../../src/services/associate.service';
 import * as associateDao from '../../src/daos/associate.dao';
 import { Associate } from '../../src/models/Associate';
+import { AssociateSkill } from '../../src/models/AssociateSkills';
 
 
 jest.mock('../../src/daos/associate.dao');
@@ -160,5 +161,77 @@ describe('patchAssociate', () => {
         } catch(err) {
             expect(err).toBeTruthy();
         }
+    });
+});
+
+describe('saveAssociateSkill', () => {
+    test('422 returned if no associateId provided', async () => {
+        expect.assertions(1);
+
+        mockAssociateDao.saveAssociateSkill
+            .mockImplementation(() => ({}));
+
+        const payload = {
+            skillId: 100
+        }
+
+        try {
+            await associateService.saveAssociateSkill(payload);
+            fail('associateService.saveAssociateSkill did not throw expected error');
+        } catch(err) {
+            expect(err).toBeDefined();
+        }
+    });
+
+    test('422 returned if no skillId is provided', async () => {
+        expect.assertions(1);
+        mockAssociateDao.saveAssociateSkill
+            .mockImplementation(() => ({}));
+
+        const payload = {
+            associateId: 100
+        }
+
+        try {
+            await associateService.saveAssociateSkill(payload);
+            fail('associateService.saveAssociateSkill did not throw expected error');
+        } catch(err) {
+            expect(err).toBeDefined();
+        }
+    });
+
+
+    test('Input object transformed to AssociateSkill object', async () => {
+        expect.assertions(2);
+
+        mockAssociateDao.saveAssociateSkill
+            .mockImplementation(o => o);
+
+        const payload = {
+            associateId: 100,
+            skillId: 100
+        };
+
+        const result = await associateService.saveAssociateSkill(payload);
+
+        expect(payload).not.toBeInstanceOf(AssociateSkill);
+        expect(result).toBeInstanceOf(AssociateSkill);
+    });
+    
+    test('Extraneous fields in input are not in output', async () => {
+        expect.assertions(1);
+
+        mockAssociateDao.saveAssociateSkill
+            .mockImplementation(o => o);
+
+        const payload = {
+            associateId: 100,
+            skillId: 100,
+            foofoo: true
+        };
+
+        const result = await associateService.saveAssociateSkill(payload) as any;
+
+        expect(result.foofoo).not.toBeDefined();
     });
 });

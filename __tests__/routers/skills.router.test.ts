@@ -23,15 +23,6 @@ describe('GET /skill', () => {
             .expect('content-type', 'application/json; charset=utf-8');
     });
 
-    test('No object found (404)', async() => {
-        mockSkillService.getAllSkills
-            .mockImplementation(async () => (0));
-
-        await request(app)
-            .get('/skill')
-            .expect(404);
-    });
-
     test('Returns normally under normal circumstances', async () => {
         mockSkillService.getAllSkills.mockImplementation(async () => {throw new Error()});
         await request(app)
@@ -39,6 +30,36 @@ describe('GET /skill', () => {
             .expect(500);
     });
 });
+
+describe('GET /skill/:id', () => {
+    test('Normal behavior Json with status 200', async () => {
+        mockSkillService.getSkillById
+            .mockImplementation(async () => ({}));
+
+        await request(app)
+            .get('/skill/1')
+            .expect(200)
+            .expect('content-type', 'application/json; charset=utf-8')
+    });
+
+    test('No object found (404)', async() => {
+        mockSkillService.getSkillById
+            .mockImplementation(async () => (undefined));
+
+        await request(app)
+            .get('/skill/blahblahblah')
+            .expect(404);
+    });
+
+    test('500 internal server error', async() => {
+        mockSkillService.getSkillById
+            .mockImplementation(async () => {throw new Error()});
+
+        await request(app)
+            .get('/skill/99')
+            .expect(500)
+    })
+})
 
 describe('POST /skill', () => {
     test('Successful creation should return 201 status', async () => {
@@ -70,35 +91,6 @@ describe('POST /skill', () => {
     });
 });
 
-describe('GET /skill/:id', () => {
-    test('Normal behavior Json with status 200', async () => {
-        mockSkillService.getSkillById
-            .mockImplementation(async () => ({}));
-
-        await request(app)
-            .get('/skill/1')
-            .expect(200)
-            .expect('content-type', 'application/json; charset=utf-8')
-    });
-
-    test('No object found (404)', async() => {
-        mockSkillService.getSkillById
-            .mockImplementation(async () => (0));
-
-        await request(app)
-            .get('/skill/blahblahblah')
-            .expect(404);
-    });
-
-    test('500 internal server error', async() => {
-        mockSkillService.getSkillById
-            .mockImplementation(async () => {throw new Error()});
-
-        await request(app)
-            .get('/skill/99')
-            .expect(500)
-    })
-})
 
 describe('PATCH /skill', () => {
     test('Successful update should return 201 status', async () => {
@@ -114,7 +106,7 @@ describe('PATCH /skill', () => {
         await request(app)
             .patch('/skill')
             .send(payload)
-            .expect(201)
+            .expect(200)
             .expect('content-type', 'application/json; charset=utf-8')
     });
 
@@ -136,7 +128,7 @@ describe('PATCH /skill', () => {
 
     test('No object found (404)', async() => {
         mockSkillService.patchSkill
-            .mockImplementation(async () => (0));
+            .mockImplementation(async () => (undefined));
 
         const payload = {
             skillLevel: 'Master',
@@ -162,7 +154,7 @@ describe('DELETE /skill/:id', () => {
 
     test('No object found (404)', async() => {
         mockSkillService.deleteSkill
-            .mockImplementation(async () => (0));
+            .mockImplementation(async () => (undefined));
 
         await request(app)
             .delete('/skill/1')
