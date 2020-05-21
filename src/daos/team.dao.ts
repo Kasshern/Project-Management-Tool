@@ -1,7 +1,7 @@
 /* istanbul ignore file */
 import { db } from '../daos/db';
 import { Team, TeamRow } from '../models/Team';
-import { TeamAssignment, TeamAssignmentRow } from '../models/teamAssignment';
+import { TeamAssignment, TeamAssignmentRow } from '../models/TeamAssignment';
 import { Associate, AssociateRow } from '../models/Associate';
 
 /**
