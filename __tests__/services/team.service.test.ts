@@ -1,7 +1,7 @@
 import * as teamService from '../../src/services/team.service';
 import * as teamDao from '../../src/daos/team.dao';
 import { Team } from '../../src/models/Team';
-import { TeamAssignment } from '../../src/models/teamAssignment';
+import { TeamAssignment } from '../../src/models/TeamAssignment';
 
 
 jest.mock('../../src/daos/team.dao');
