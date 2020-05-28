@@ -100,7 +100,7 @@ trainerRouter.get('/:id/batch/associate', async (request, response, next) => {
         return;
     }
 
-    // Dao returns undefined for all non-existent trainer
+    // Dao returns undefined for non-existent trainer
     if (!associate) {
         response.sendStatus(404);
     } else {
